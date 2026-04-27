@@ -1,6 +1,14 @@
 import request from "@/request/packageRequest";
 
 
+//查询工序
+export function QuerySpecName(data: any) {
+    return request({
+        url: "/api/Inspection/QuerySpecName",
+        method: "post",
+        data,
+    });
+}
 //创建检验单
 export function CreateInspectionNO(data: any) {
     return request({
@@ -41,6 +49,15 @@ export function CreateInspectionFJob(data: any) {
         url: "/api/Inspection/CreateInspectionFJob",
         method: "post",
         data,
+    });
+}
+export function LabelPrintDownloadFtpServer(data: any) {
+    return request({
+        url: "/api/Inspection/LabelPrintDownloadFtpServer",
+        method: "post",
+        params:{
+            PictureId:data
+        }
     });
 }
 

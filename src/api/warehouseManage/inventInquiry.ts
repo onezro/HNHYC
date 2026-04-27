@@ -1,4 +1,5 @@
 import request from "@/request/warehouseRequest";
+import request1 from "@/request/request24/index";//24
 
 
 //物料来源
@@ -40,5 +41,46 @@ export function GetFinishedProductInventoryQuery(data: any) {
         url: "/api/warehouse/GetFinishedProductInventoryQuery",
         method: "post",
         data,
+    });
+}
+
+//物料库存
+export function QueryInventoryMaterialInfo(data: any) {
+    return request1({
+        url: "/api/InventoryBalance/QueryInventoryMaterialInfo",
+        method: "post",
+        data,
+    });
+}
+export function QueryInventoryProductInfo(data: any) {
+    return request1({
+        url: "/api/InventoryBalance/QueryInventoryProductInfo",
+        method: "post",
+        data,
+    });
+}
+//获取打印机
+export function InventoryPrinterQuery(data: any) {
+    return request1({
+        url: "/api/InventoryBalance/InventoryPrinterQuery",
+        method: "post",
+        data,
+    });
+}
+
+//物料打印
+export function MaterialContainerPrinter(data: any) {
+    return request1({
+        url: "/api/InventoryBalance/MaterialContainerPrinter",
+        method: "post",
+        params:data
+    });
+}
+//成品打印
+export function ProductContainerPrinter(data: any) {
+    return request1({
+        url: "/api/InventoryBalance/ProductContainerPrinter",
+        method: "post",
+         params:data
     });
 }

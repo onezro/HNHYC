@@ -22,6 +22,6 @@ const dataimg=ref(['https://www.bicv.com/skin/default/images/homeabout.jpg','	ht
   height: calc(100vh - 80px);
   background-repeat: no-repeat;
   background-size: cover;
-  background-image: url('../../assets/pic09.png');
+  background-image: url('../../assets/bg.jpg');
 }
 </style>

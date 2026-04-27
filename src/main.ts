@@ -28,6 +28,14 @@ import i18n from "./locale/index";
 import DataVVue3 from '@kjgl77/datav-vue3'
 import '@/assets/css/vue-office-excel.css'
 // import { useTableAutoWidth } from 'auto-layout-col'
+import { library, dom } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { fab } from '@fortawesome/free-brands-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
+
+library.add(fas, far, fab);
+dom.watch();
 
 const app = createApp(App)
 // app.directive(ClickOutside)
@@ -46,4 +54,4 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 // app.use(ClickOutside)
 
-app.mount('#app')
+app .component("font-awesome-icon", FontAwesomeIcon).mount('#app')

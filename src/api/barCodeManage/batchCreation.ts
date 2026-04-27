@@ -82,3 +82,36 @@ export function getWorkflowQuery(data: any) {
         data,
     });
 }
+//获取产线
+export function GetMfgLineQuery(data: any) {
+    return request({
+        url: "/api/ModelingDataQuery/GetMfgLineQuery",
+        method: "post",
+        data,
+    });
+}
+//获取生产部
+export function GetWorkCenterQuery(data: any) {
+    return request({
+        url: "/api/ModelingDataQuery/GetWorkCenterQuery",
+        method: "post",
+        data,
+    });
+}
+//A4打印预览
+export function DownloadMfgOrderReportAsync(data: any) {
+    return request1({
+        url: "/api/MfgOrderContainerPrint/DownloadMfgOrderReportAsync",
+        method: "post",
+        params:{
+            MfgOrderName:data
+        }
+    });
+}
+export function DownloadContainerReportAsyncPDF(data: any) {
+    return request1({
+        url: "/api/MfgOrderContainerPrint/DownloadContainerReportAsyncPDF",
+        method: "post",
+       data
+    });
+}

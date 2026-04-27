@@ -125,11 +125,10 @@ onMounted(() => {
     initTags()
     addTags()
     //
-    getNotifierList()
-    userStore.setUserInfo2(sessionStorage.getItem('OPERATOR') || '');
-    // console.log(userStore.getUserInfo2);
+    // getNotifierList()
+    // userStore.setUserInfo2(sessionStorage.getItem('OPERATOR') || '');
     
-    operator.value = userStore.getUserInfo2
+    // operator.value = userStore.getUserInfo2
 })
 onActivated(() => {
     // console.log(111)
@@ -374,13 +373,13 @@ const fullScreen = () => {
 //富
 const operator = ref('')
 const operatorList = ref<any[]>([])
-const getNotifierList = () => {
-    GetEmployeeQuery({
-        EmployeeGroupName:'QC EmployeeGroup'
-    }).then((res: any) => {
-        operatorList.value = res.content;
-    });
-};
+// const getNotifierList = () => {
+//     GetEmployeeQuery({
+//         EmployeeGroupName:'QC EmployeeGroup'
+//     }).then((res: any) => {
+//         operatorList.value = res.content;
+//     });
+// };
 const changeOperator = (val: any) => {
     // console.log(val);
     userStore.setUserInfo2(val);
@@ -416,7 +415,7 @@ const changeOperator = (val: any) => {
                     </div>
                     <div class="flex items-center gap-2 px-2 border-l border-gray-200 ml-2 h-full">
                         <!-- <div class=" absolute top-1 right-2 flex items-center  gap-2" > -->
-                        <el-form ref="formRef" :model="form" label-width="auto" :size="'small'"
+                        <!-- <el-form ref="formRef" :model="form" label-width="auto" :size="'small'"
                             class="h-full flex items-center">
                             <el-form-item :label="'操作人'" prop="Notifier" class="mb-0">
                                 <el-select v-model="operator" placeholder="" style="width: 150px"
@@ -424,7 +423,7 @@ const changeOperator = (val: any) => {
                                     <el-option v-for="n in operatorList" :label="n.FullName" :value="n.EmployeeName" />
                                 </el-select>
                             </el-form-item>
-                        </el-form>
+                        </el-form> -->
                         <div @click="refreshSelectedTag(selectTag)" class="h-full flex items-center">
                             <el-icon :size="23" color="#6e7079">
                                 <RefreshRight />

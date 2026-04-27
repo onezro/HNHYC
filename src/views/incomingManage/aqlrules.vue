@@ -60,8 +60,8 @@
                 </el-table-column>
                 <el-table-column prop="MASTERDescription" fixed :label="'方案'"
                     :min-width="getColumnWidth('MASTERDescription')" />
-                <el-table-column prop="ES_INSPECTION_MASTERName" :label="'材料产品名称'"
-                    :min-width="getColumnWidth('ES_INSPECTION_MASTERName')" />
+                <el-table-column prop="InspectionMasterName" :label="'材料产品名称'"
+                    :min-width="getColumnWidth('InspectionMasterName')" />
 
                 <el-table-column prop="CustomerName" :label="'客户'" :min-width="getColumnWidth('CustomerName')" />
                 <el-table-column prop="Description" :label="'产品描述'" :min-width="getColumnWidth('Description')" />
@@ -132,25 +132,33 @@
             :append-to-body="true" :close-on-click-modal="false" :close-on-press-escape="false" align-center>
             <el-form :model="addForm" ref="addFormRef" label-width="auto" :inline="false">
                 <el-form-item :label="'材料产品名称'" prop="partNumber">
-                    <!-- <el-select v-model="addForm.InspectionMasterName" placeholder="请选择" filterable>
-                        <el-option :label="p.productname" :value="p.productname" v-for="p in productList" />
-                    </el-select> -->
                     <el-select-v2 v-model="addForm.InspectionMasterName" filterable :options="productList"
                         placeholder="" :props="{ value: 'productname', label: 'product' }" style="width: 100%" />
                 </el-form-item>
-                <!-- <el-form-item :label="$t('aqlrules.DBType')" prop="DBType">
-                    <el-select v-model="addForm.InspectionType" placeholder="请选择" filterable>
-                        <el-option :label="p.InspectionType" :value="p.InspectionType" v-for="p in typetList" />
+                <el-form-item :label="$t('processInspect.specName')" prop="SpecName">
+                    <el-select style="width: 100%" v-model="addForm.SpecName" @change="getData" placeholder="请选择"
+                        clearable filterable>
+                        <el-option :label="v.SpecName" :value="v.SpecName" :key="v.SpecName" v-for="v in specList" />
                     </el-select>
-                </el-form-item> -->
-
+                </el-form-item>
+                <el-form-item label="客户" prop="CustomerName" class="mb-2">
+                    <el-select v-model="addForm.Customer" @change="getData" placeholder="请选择" clearable filterable
+                        style="width: 100%;">
+                        <el-option :label="p.CustomerName" :value="p.CustomerName" :key="p.CustomerId"
+                            v-for="p in customerList" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="样本数" prop="SampleNum" class="mb-2">
+                    <el-input v-model="addForm.SampleNum" placeholder="请输入" style="width: 100%;" />
+                </el-form-item>
                 <el-tabs :tab-position="'left'" v-model="activeName" style="height: 350px" type="border-card"
                     @tab-change="tabChange">
                     <el-tab-pane v-for="a in addTabList" :label="a.label" :name="a.value" :key="a.label">
                         <el-table :data="addTypeTable" style="width: 100%" :height="320" size="small" border stripe>
                             <el-table-column type="index" align="center" fixed :label="$t('publicText.index')"
                                 width="50" />
-                            <el-table-column prop="InspectionType" :label="$t('aqlrules.ProjectCategoryName')" min-width="200">
+                            <el-table-column prop="InspectionType" :label="$t('aqlrules.ProjectCategoryName')"
+                                min-width="200">
                                 <template #default="scope">
 
                                     <el-select v-model="scope.row.ProjectCategoryName" placeholder="请选择" filterable
@@ -162,8 +170,8 @@
                             </el-table-column>
                             <el-table-column prop="ProjectName" :label="$t('aqlrules.ProjectName')" min-width="200">
                                 <template #default="scope">
-                                    <el-select v-model="scope.row.ProjectName" placeholder="请选择" filterable
-                                        size="small" style="width: 100%;">
+                                    <el-select v-model="scope.row.ProjectName" placeholder="请选择" filterable size="small"
+                                        style="width: 100%;">
                                         <el-option :label="p.ProjectName" :value="p.ProjectName"
                                             v-for="p in projectList" />
                                     </el-select>
@@ -199,10 +207,11 @@
                                     <el-input v-model="scope.row.MaxValue" size="small"></el-input>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="ToolName" :label="$t('aqlrules.ToolName')"min-width="200">
+                            <el-table-column prop="ToolName" :label="$t('aqlrules.ToolName')" min-width="200">
                                 <template #default="scope">
                                     <!-- <el-input v-model="scope.row.ToolName"></el-input> -->
-                                    <el-select v-model="scope.row.ToolName" placeholder="请选择" filterable size="small" style="width: 100%;">
+                                    <el-select v-model="scope.row.ToolName" placeholder="请选择" filterable size="small"
+                                        style="width: 100%;">
                                         <el-option :label="p.ResourceName" :value="p.ResourceName"
                                             v-for="p in resourceList" />
                                     </el-select>
@@ -246,19 +255,38 @@
                         <el-option :label="p.productname" :value="p.productname" v-for="p in productList" />
                     </el-select> -->
                 </el-form-item>
+                <el-form-item :label="$t('processInspect.specName')" prop="SpecName">
+                    <el-input v-model="editForm.SpecName" placeholder="请输入" disabled />
+                    <!-- <el-select style="width: 100%" v-model="editForm.SpecName" @change="getData" placeholder="请选择"
+                        clearable filterable >
+                        <el-option :label="v.SpecName" :value="v.SpecName" :key="v.SpecName" v-for="v in specList" />
+                    </el-select> -->
+                </el-form-item>
+                <el-form-item label="客户" prop="CustomerName" class="mb-2">
+                    <el-input v-model="editForm.Customer" placeholder="请输入" disabled />
+                    <!-- <el-select v-model="editForm.Customer" @change="getData" placeholder="请选择" clearable filterable
+                       style="width: 100%">
+                        <el-option :label="p.CustomerName" :value="p.CustomerName" :key="p.CustomerId"
+                            v-for="p in customerList" />
+                    </el-select> -->
+                </el-form-item>
                 <!-- <el-form-item :label="$t('aqlrules.DBType')" prop="DBType">
                     <el-select v-model="getDetailForm.InspectionType" placeholder="请选择" filterable
                         @change="getDetailData">
                         <el-option :label="p.InspectionType" :value="p.InspectionType" v-for="p in typetList" />
                     </el-select>
                 </el-form-item> -->
+                <el-form-item label="样本数" prop="SampleNum" class="mb-2">
+                    <el-input v-model="editForm.SampleNum" placeholder="请输入"  disabled/>
+                </el-form-item>
             </el-form>
             <el-tabs :tab-position="'left'" v-model="activeName2" style="height: 350px" type="border-card"
                 @tab-change="tabChange2">
                 <el-tab-pane v-for="a in addTabList" :label="a.label" :name="a.value" :key="a.label">
                     <el-table :data="editTypeTable" style="width: 100%" :height="300" size="small" border stripe>
                         <el-table-column type="index" align="center" fixed :label="$t('publicText.index')" width="50" />
-                        <el-table-column prop="InspectionType" :label="$t('aqlrules.ProjectCategoryName')" min-width="200">
+                        <el-table-column prop="InspectionType" :label="$t('aqlrules.ProjectCategoryName')"
+                            min-width="200">
                             <template #default="scope">
                                 <!-- <el-input v-model="scope.row.InspectionType" size="small"></el-input> -->
                                 <el-select v-model="scope.row.ProjectCategoryName" placeholder="请选择" filterable
@@ -268,9 +296,10 @@
                                 </el-select>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="ProjectName" :label="$t('aqlrules.ProjectName')"  min-width="200">
+                        <el-table-column prop="ProjectName" :label="$t('aqlrules.ProjectName')" min-width="200">
                             <template #default="scope">
-                                <el-select v-model="scope.row.ProjectName" placeholder="请选择" filterable size="small" style="width: 100%;">
+                                <el-select v-model="scope.row.ProjectName" placeholder="请选择" filterable size="small"
+                                    style="width: 100%;">
                                     <el-option :label="p.ProjectName" :value="p.ProjectName" v-for="p in projectList" />
                                 </el-select>
                             </template>
@@ -284,8 +313,8 @@
                 </el-table-column> -->
                         <el-table-column prop="InspectionType" :label="'操作类型'" min-width="200">
                             <template #default="scope">
-                                <el-select v-model="scope.row.MeasurementType" placeholder="请选择" filterable
-                                    size="small" style="width: 100%;">
+                                <el-select v-model="scope.row.MeasurementType" placeholder="请选择" filterable size="small"
+                                    style="width: 100%;">
                                     <el-option :label="'计数'" :value="'计数'" />
                                     <el-option :label="'计量'" :value="'计量'" />
                                 </el-select>
@@ -312,10 +341,11 @@
                                 <el-input v-model="scope.row.MaxValue" size="small"></el-input>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="ToolName" :label="$t('aqlrules.ToolName')"  min-width="200">
+                        <el-table-column prop="ToolName" :label="$t('aqlrules.ToolName')" min-width="200">
                             <template #default="scope">
                                 <!-- <el-input v-model="scope.row.ToolName"></el-input> -->
-                                <el-select v-model="scope.row.ToolName" placeholder="请选择" filterable size="small" style="width: 100%;">
+                                <el-select v-model="scope.row.ToolName" placeholder="请选择" filterable size="small"
+                                    style="width: 100%;">
                                     <el-option :label="p.ResourceName" :value="p.ResourceName"
                                         v-for="p in resourceList" />
                                 </el-select>
@@ -348,19 +378,35 @@
         <el-dialog :title="'复制'" v-model="copyVisible" width="85%" @close="copyCancel" :append-to-body="true"
             :close-on-click-modal="false" :close-on-press-escape="false" align-center>
             <el-form :model="copyForm" ref="copyFormRef" label-width="auto" :inline="false">
-                <el-form-item :label="'材料产品名称'" prop="InspectionMasterName" >
+                <el-form-item :label="'材料产品名称'" prop="InspectionMasterName">
                     <!-- <el-input v-model="copyForm.InspectionMasterName" placeholder=""  /> -->
                     <el-select-v2 v-model="copyForm.InspectionMasterName" filterable :options="productList"
                         placeholder="" :props="{ value: 'productname', label: 'product' }" style="width: 100%" />
                 </el-form-item>
-
+                <el-form-item :label="$t('processInspect.specName')" prop="SpecName">
+                    <el-select style="width: 100%" v-model="copyForm.SpecName" @change="getData" placeholder="请选择"
+                        clearable filterable>
+                        <el-option :label="v.SpecName" :value="v.SpecName" :key="v.SpecName" v-for="v in specList" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="客户" prop="CustomerName" class="mb-2">
+                    <el-select v-model="copyForm.Customer" @change="getData" placeholder="请选择" clearable filterable
+                        style="width: 100%">
+                        <el-option :label="p.CustomerName" :value="p.CustomerName" :key="p.CustomerId"
+                            v-for="p in customerList" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="样本数" prop="SampleNum" class="mb-2">
+                    <el-input v-model="copyForm.SampleNum" placeholder="请输入"  />
+                </el-form-item>
             </el-form>
             <el-tabs :tab-position="'left'" v-model="activeName2" style="height: 350px" type="border-card"
                 @tab-change="tabChange3">
                 <el-tab-pane v-for="a in addTabList" :label="a.label" :name="a.value" :key="a.label">
                     <el-table :data="copyTypeTable" style="width: 100%" :height="300" size="small" border stripe>
                         <el-table-column type="index" align="center" fixed :label="$t('publicText.index')" width="50" />
-                        <el-table-column prop="InspectionType" :label="$t('aqlrules.ProjectCategoryName')" min-width="200">
+                        <el-table-column prop="InspectionType" :label="$t('aqlrules.ProjectCategoryName')"
+                            min-width="200">
                             <template #default="scope">
                                 <!-- <el-input v-model="scope.row.InspectionType" size="small"></el-input> -->
                                 <el-select v-model="scope.row.ProjectCategoryName" placeholder="请选择" filterable
@@ -370,17 +416,18 @@
                                 </el-select>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="ProjectName" :label="$t('aqlrules.ProjectName')"  min-width="200">
+                        <el-table-column prop="ProjectName" :label="$t('aqlrules.ProjectName')" min-width="200">
                             <template #default="scope">
-                                <el-select v-model="scope.row.ProjectName" placeholder="请选择" filterable size="small" style="width: 100%">
+                                <el-select v-model="scope.row.ProjectName" placeholder="请选择" filterable size="small"
+                                    style="width: 100%">
                                     <el-option :label="p.ProjectName" :value="p.ProjectName" v-for="p in projectList" />
                                 </el-select>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="InspectionType" :label="'操作类型'"  min-width="200">
+                        <el-table-column prop="InspectionType" :label="'操作类型'" min-width="200">
                             <template #default="scope">
-                                <el-select v-model="scope.row.MeasurementType" placeholder="请选择" filterable
-                                    size="small" style="width: 100%">
+                                <el-select v-model="scope.row.MeasurementType" placeholder="请选择" filterable size="small"
+                                    style="width: 100%">
                                     <el-option :label="'计数'" :value="'计数'" />
                                     <el-option :label="'计量'" :value="'计量'" />
                                 </el-select>
@@ -410,7 +457,8 @@
                         <el-table-column prop="ToolName" :label="$t('aqlrules.ToolName')" min-width="200">
                             <template #default="scope">
                                 <!-- <el-input v-model="scope.row.ToolName"></el-input> -->
-                                <el-select v-model="scope.row.ToolName" placeholder="请选择" filterable size="small" style="width: 100%">
+                                <el-select v-model="scope.row.ToolName" placeholder="请选择" filterable size="small"
+                                    style="width: 100%">
                                     <el-option :label="p.ResourceName" :value="p.ResourceName"
                                         v-for="p in resourceList" />
                                 </el-select>
@@ -446,6 +494,9 @@
 
 <script setup lang="ts">
 import {
+    QuerySpecName
+} from "@/api/smtSpotCheck/processFisrt";
+import {
     GetProjectCategoryQuery,
     GetProjectQuery,
     GetResourceQuery,
@@ -457,7 +508,7 @@ import {
     AyscDelInspectionDetail,
     GetProductTypeQuery,
     GetProductFamilyQuery,
-    GetCustomerQuery
+    GetCustomerQuery,
 } from "@/api/incomingManage/aqlrules";
 import {
     ref,
@@ -496,9 +547,13 @@ const resourceList = ref<any[]>([]);
 const projectList = ref<any[]>([]);
 const addVisible = ref(false);
 const addForm = ref({
+    InspectionMasterNameID: '',
     InspectionMasterName: "",
     DBType: "Add",
     InspectionType: '',
+    SpecName: '',
+    Customer: '',
+    SampleNum: '',
     iQC_InspectionDetails: [
         {
             InspectionDetailName: "",
@@ -520,8 +575,12 @@ const addForm = ref({
 const addFormRef = ref();
 const editVisible = ref(false);
 const editForm = ref({
+    InspectionMasterNameID: '',
     InspectionMasterName: "",
     DBType: "Update",
+    SpecName: '',
+    Customer: '',
+    SampleNum: '',
     iQC_InspectionDetails: [
         {
             InspectionDetailName: "",
@@ -542,6 +601,7 @@ const editForm = ref({
 });
 const editFormRef = ref();
 const getDetailForm = ref({
+    InspectionMasterNameID:'',
     InspectionMasterName: "",
     InspectionType: "",
 });
@@ -575,9 +635,13 @@ const customerList = ref<any[]>([])
 const copyVisible = ref(false);
 const copyFormRef = ref();
 const copyForm = ref({
+    InspectionMasterNameID: '',
     InspectionMasterName: "",
     DBType: "Add",
     InspectionType: '',
+    SpecName: '',
+    Customer: '',
+    SampleNum:'',
     iQC_InspectionDetails: [
         {
             InspectionDetailName: "",
@@ -596,6 +660,7 @@ const copyForm = ref({
         },
     ],
 })
+const specList = ref<any[]>([])
 const isLastDetail1 = computed(() => {
     return (index: number) => {
         return index === addTypeTable.value.length - 1
@@ -632,6 +697,7 @@ onBeforeMount(() => {
     getProductTypeData()
     getProductFamilyData()
     getCustomerData()
+    getSpecData()
 });
 onMounted(() => {
     window.addEventListener("resize", getScreenHeight);
@@ -698,6 +764,12 @@ const getProductFamilyData = () => {
         familyList.value = res.content
     })
 }
+//获取工序
+const getSpecData = () => {
+    QuerySpecName({}).then((res: any) => {
+        specList.value = res.content
+    })
+}
 const openAdd = () => {
 
     activeName.value = 'IQC'
@@ -752,6 +824,9 @@ const addCancel = () => {
     addForm.value.InspectionMasterName = "";
     addForm.value.DBType = "Add";
     addForm.value.InspectionType = ''
+    addForm.value.SpecName = ''
+    addForm.value.Customer = ''
+    addForm.value.SampleNum = ''
     addForm.value.iQC_InspectionDetails = [
     ];
 };
@@ -840,9 +915,13 @@ const tabChange2 = (val: any) => {
 }
 const handleEdit = (val: any) => {
     activeName.value = 'IQC'
-    editForm.value.InspectionMasterName = val.ES_INSPECTION_MASTERName;
+    editForm.value.InspectionMasterName = val.InspectionMasterName;
     editForm.value.DBType = "Update";
-    getDetailForm.value.InspectionMasterName = val.ES_INSPECTION_MASTERName;
+    editForm.value.SpecName = val.ES_SpecName
+    editForm.value.Customer = val.CustomerName
+    editForm.value.SampleNum = val.SampleNum
+    editForm.value.InspectionMasterNameID = val.InspectionMasterNameID
+    getDetailForm.value.InspectionMasterNameID = val.InspectionMasterNameID;
     getDetailForm.value.InspectionType = ''
     getDetailData()
     editVisible.value = true;
@@ -986,6 +1065,10 @@ const editCancel = () => {
     editVisible.value = false;
     editForm.value.InspectionMasterName = "";
     editForm.value.DBType = "Update";
+    editForm.value.SpecName = ''
+    editForm.value.Customer = ''
+    editForm.value.SampleNum = ''
+    editForm.value.InspectionMasterNameID = ''
     getDetailForm.value.InspectionType = "";
     editForm.value.iQC_InspectionDetails = [
     ];
@@ -1018,6 +1101,9 @@ const handleCopy = (val: any) => {
     activeName.value = 'IQC'
     copyForm.value.InspectionMasterName = val.ES_INSPECTION_MASTERName;
     copyForm.value.DBType = "Add";
+    copyForm.value.SpecName = val.ES_SpecName
+    copyForm.value.Customer = val.CustomerName
+    copyForm.value.SampleNum = val.SampleNum
     getDetailForm.value.InspectionMasterName = val.ES_INSPECTION_MASTERName;
     getDetailForm.value.InspectionType = ''
     GetInspectionDetailQuery(getDetailForm.value).then((res: any) => {
@@ -1107,6 +1193,9 @@ const copyCancel = () => {
     copyForm.value.InspectionMasterName = "";
     copyForm.value.DBType = "Add";
     copyForm.value.InspectionType = ''
+    copyForm.value.SpecName = ''
+    copyForm.value.Customer = ''
+    copyForm.value.SampleNum = ''
     copyForm.value.iQC_InspectionDetails = [
     ];
     activeName2.value = 'IQC'
@@ -1160,7 +1249,7 @@ const getScreenHeight = () => {
 // 使用计算属性缓存列宽计算结果
 const columnWidths = computed(() => {
     const columns = [
-        { label: '方案名称', prop: 'ES_INSPECTION_MASTERName' },
+        { label: '材料产品名称', prop: 'InspectionMasterName' },
         { label: '方案描述', prop: 'MASTERDescription' },
         { label: '客户', prop: 'CustomerName' },
         { label: '产品描述', prop: 'Description' },

@@ -2,7 +2,6 @@
     <div class="line-container" ref="container" id="fullDiv5">
         <div class="content-wrapper" ref="content" :style="contentStyle">
             <indexChart></indexChart>
-
         </div>
     </div>
 </template>
@@ -108,7 +107,7 @@ const handleResize = () => {
     overflow: hidden;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    background-image: url("../../../assets/bg.png");
+    background-image: url("../../../assets/bg2.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

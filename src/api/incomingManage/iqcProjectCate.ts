@@ -19,3 +19,11 @@ export function AyscProjectCategory(data: any) {
         data,
     });
 }
+//删除
+export function ProjectCategoryMaintDelete(data: any) {
+    return request({
+        url: "/api/IQcController/ProjectCategoryMaintDelete",
+        method: "post",
+        data,
+    });
+}

@@ -47,3 +47,27 @@ export function GetReverseTraceabilityResourceDelQuerys(data: any) {
         data,
     });
 }
+//质量
+export function GetReverseInspectionQuerys(data: any) {
+    return request({
+        url: "/api/ReportQuery/GetReverseInspectionQuerys",
+        method: "post",
+        data,
+    });
+}
+//首
+export function GetReverseInspectionDelQuerys(data: any) {
+    return request({
+        url: "/api/ReportQuery/GetReverseInspectionDelQuerys",
+        method: "post",
+        data,
+    });
+}
+//OQC
+export function GetShipmentInspectionQuery(data: any) {
+    return request({
+        url: "/api/ReportQuery/GetShipmentInspectionQuery",
+        method: "post",
+        data,
+    });
+}

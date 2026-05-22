@@ -86,7 +86,7 @@
                     <template #default="scope">
                         <span>{{
                             scope.$index + pageObj.pageSize * (pageObj.currentPage - 1) + 1
-                        }}</span>
+                            }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="ShipmentInspectionNo" fixed :label="$t('shipmentInspect.shipmentInspectionNo')"
@@ -254,7 +254,8 @@
                             <el-option v-for="employee in EmployeeList" :key="employee.FullName"
                                 :label="employee.FullName" :value="employee.FullName" />
                         </el-select>
-                    </el-form-item></el-form>
+                    </el-form-item>
+                </el-form>
             </el-form>
             <el-row :gutter="20">
                 <el-col :span="10">
@@ -293,7 +294,7 @@
                 </el-col>
                 <el-col :span="14">
                     <el-tabs v-model="activeName" type="border-card">
-                        <el-tab-pane :label="'计量'+(measureData.length)" name="first">
+                        <el-tab-pane :label="'计量' + (measureData.length)" name="first">
                             <el-table :data="measureData" border stripe style="width: 100%" size="small" :height="450">
                                 <el-table-column type="index" align="center" fixed :label="$t('publicText.index')"
                                     width="50" />
@@ -326,7 +327,7 @@
                                     <template #default="{ row }">
                                         <span class="underline text-[#006487]" @click="previewImg(row)">{{
                                             row.PictureName
-                                        }}</span>
+                                            }}</span>
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="Remark" :label="$t('shipmentInspect.remark')" width="150">
@@ -348,7 +349,7 @@
                                 </el-table-column>
                             </el-table>
                         </el-tab-pane>
-                        <el-tab-pane :label="'计数'+(countData.length)" name="second">
+                        <el-tab-pane :label="'计数' + (countData.length)" name="second">
                             <el-table :data="countData" border stripe style="width: 100%" size="small" :height="450">
                                 <el-table-column type="index" align="center" fixed :label="$t('publicText.index')"
                                     width="50" />
@@ -382,7 +383,7 @@
                                     <template #default="{ row }">
                                         <span class="underline text-[#006487]" @click="previewImg(row)">{{
                                             row.PictureName
-                                        }}</span>
+                                            }}</span>
                                         <!-- <el-upload v-model:file-list="fileList" :limit="1" :auto-upload="false"
                                             :on-change="(file: any, fileList: any) => handleUploadChange(file, fileList, row)"
                                             :on-remove="(file: any, fileList: any) => handleUploadRemove(file, fileList, row)"
@@ -439,7 +440,7 @@
                 <div class="dialog-footer">
                     <el-button @click="handleAddClose">{{
                         $t("publicText.cancel")
-                    }}</el-button>
+                        }}</el-button>
                     <el-button type="primary" @click="handleAddConfirm">
                         {{ $t("publicText.confirm") }}
                     </el-button>
@@ -952,78 +953,12 @@ const updateCurrentRowInspectionResult = () => {
     // 注意：PassRate字段如需更新可在此添加，当前UI未使用该字段
     currentSelectedRow.value.JudgmentResult = inspectionResult;
 };
-// 根据右侧数据更新当前选中行的检验结果和合格率
-// const updateCurrentRowInspectionResult = () => {
-//     if (!currentSelectedRow.value) return;
 
-//     const detailData = currentSelectedRow.value.DetailData || [];
-//     let total = 0;
-//     let qualified = 0;
-
-//     for (const item of detailData) {
-//         // 计量类型判断
-//         if (item.OperationType === "计量") {
-//             const actual = item.ActualValue;
-//             // 只有当实际值存在时才参与计算
-//             if (actual !== null && actual !== undefined && actual !== "") {
-//                 total++;
-//                 const min = item.MiniMum;
-//                 const max = item.MaxiMum;
-//                 if (
-//                     min !== null &&
-//                     min !== undefined &&
-//                     max !== null &&
-//                     max !== undefined &&
-//                     Number(actual) >= Number(min) &&
-//                     Number(actual) <= Number(max)
-//                 ) {
-//                     qualified++;
-//                 }
-//             }
-//         }
-//         // 计数类型判断
-//         else if (item.OperationType === "计数") {
-//             const result = item.TestResults;
-//             // 只有当选择了结果时才参与计算
-//             if (result !== null && result !== undefined && result !== "") {
-//                 total++;
-//                 if (result === "合格") {
-//                     qualified++;
-//                 }
-//             }
-//         }
-//     }
-
-//     // 计算合格率
-//     let passRate = "";
-//     let inspectionResult = "";
-//     if (total === 0) {
-//         // 没有任何有效数据时，可视为未检验？业务上可能需要特殊处理，比如保持原值或空
-//         // 这里按照之前逻辑默认为100%合格
-//         passRate = "100%";
-//         inspectionResult = "";
-//         console.log("没信息");
-//     } else {
-//         const rate = (qualified / total) * 100;
-//         passRate = rate.toFixed(2) + "%";
-//         inspectionResult = qualified === total ? "合格" : "不合格";
-//         console.log(qualified, total);
-//     }
-//     currentSelectedRow.value.JudgmentResult = inspectionResult;
-// };
-
-// 右侧数据变化时的统一回调
 const onRightDataChange = () => {
     updateDerivedFields(measureData.value);
     updateCurrentRowInspectionResult();
 };
-// const getTitleData = () => {
-//     ShipmentInspectionContainerSNQuery({
-//         ShipmentInspectionNo: ShipmentInspectionNo.value,
-//     }).then((res: any) => {
-//         titleData.value = res.content;
-//     });
-// };
+
 const handleUploadChange = (file: any, fileList1: any, row: any) => {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -1064,8 +999,6 @@ const beforeUpload = (file: any) => {
 //保存
 const handleInspectSave = () => {
     let val = dataForm(1);
-    console.log(selectedEmployees.value);
-    console.log(val);
     if (val.Inspector === "") {
         ElMessage({
             type: "error",
@@ -1096,17 +1029,6 @@ const handleInspectSave = () => {
             message: "已取消保存",
         });
     });
-    // ShipmentInspectionExecute(val).then((res: any) => {
-
-    //     ElMessage({
-    //         type: res.success ? "success" : "error",
-    //         message: res.success ? "保存成功" : res.msg,
-    //     });
-    //     if (res.success) {
-    //         getTitleData();
-    //         getData();
-    //     }
-    // });
 };
 //提交
 const handleInspectConfirm = () => {
@@ -1118,31 +1040,34 @@ const handleInspectConfirm = () => {
         });
         return
     }
-    ShipmentInspectionExecute(val).then((res: any) => {
+    ElMessageBox.confirm("确定要保存吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+    }).then(() => {
+        ShipmentInspectionExecute(val).then((res: any) => {
 
-        ElMessage({
-            type: res.success ? "success" : "error",
-            message: res.success ? "提交成功" : res.msg,
+            ElMessage({
+                type: res.success ? "success" : "error",
+                message: res.success ? "提交成功" : res.msg,
+            });
+            if (res.success) {
+                // getTitleData()
+                getData();
+                selectedEmployees.value = []
+                OrganizationId.value = ""
+                editVisible.value = false;
+            }
         });
-        if (res.success) {
-            // getTitleData()
-            getData();
-            selectedEmployees.value = []
-            OrganizationId.value = ""
-            editVisible.value = false;
-        }
+    }).catch(() => {
+        // 取消操作
+        ElMessage({
+            type: "info",
+            message: "已取消提交",
+        });
     });
 };
-// 修改 dataForm，增加整体检验结果汇总
 const dataForm = (val: any) => {
-    // if (selectedEmployees.value.length === 0) {
-    //     ElMessage({
-    //         type: "error",
-    //         message: "请选择检验员",
-    //     });
-    //     return
-    // }
-    // selectedEmployees.value = [...new Set(selectedEmployees.value)]; // 去重
     const commonFields = {
         Status: val,
         Inspector: userStore.getUserInfo,
@@ -1156,15 +1081,15 @@ const dataForm = (val: any) => {
         shipmentInspectionSNDetailEntities: [],
     };
 
-    // 统计所有容器的检验结果
-    let allQualified = true;
+    // 统计是否存在至少一个合格容器
+    let hasQualified = false;
     const { snEntities, detailEntities } = titleData.value.reduce(
         (acc, v: any) => {
             const { DetailData, ...snEntity } = v;
             acc.snEntities.push(snEntity);
             // 检查当前容器结果是否为合格
-            if (snEntity.JudgmentResult !== "合格") {
-                allQualified = false;
+            if (snEntity.JudgmentResult === "合格") {
+                hasQualified = true;
             }
             // 处理明细数据
             if (Array.isArray(DetailData)) {
@@ -1184,9 +1109,8 @@ const dataForm = (val: any) => {
         { snEntities: [], detailEntities: [] },
     );
 
-    // 整体结果：如果没有容器或所有容器合格，则为合格，否则不合格
-    data.InspectionResult =
-        titleData.value.length === 0 || allQualified ? "合格" : "不合格";
+    // 整体结果：存在任意合格则为合格，否则（包括空列表）为不合格
+    data.InspectionResult = hasQualified ? "合格" : "不合格";
     data.shipmentInspectionSNEntities = snEntities.map((item: any) => ({
         ...item,
         Inspector: selectedEmployees.value.length > 0 ? selectedEmployees.value.join(',') : ""

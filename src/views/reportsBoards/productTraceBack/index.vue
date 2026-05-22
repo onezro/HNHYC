@@ -3,8 +3,8 @@
     <el-card shadow="always" :body-style="{ padding: '8px' }">
       <el-form ref="formRef" :inline="true" size="small" label-width="auto" @submit.native.prevent>
         <el-form-item :label="t('reportBoard.productTraceBack.OrderNumber')" prop="OrderNo" class="mb-2">
-          <el-input v-model="getForm.OrderNo" placeholder="" clearable @clear="getData"
-            @keyup.enter.native="getData" style="width: 190px" />
+          <el-input v-model="getForm.OrderNo" placeholder="" clearable @clear="getData" @keyup.enter.native="getData"
+            style="width: 190px" />
         </el-form-item>
         <el-form-item :label="t('reportBoard.productTraceBack.ProductName')" prop="ProductName" class="mb-2">
           <el-input v-model="getForm.ProductName" placeholder="" clearable @clear="getData"
@@ -23,16 +23,16 @@
             @keyup.enter.native="getData" style="width: 190px" />
         </el-form-item>
         <el-form-item :label="t('reportBoard.productTraceBack.StartDate')" prop="PlanStartDate" class="mb-2">
-          <el-date-picker :shortcuts="shortcuts" v-model="searchDate1" value-format="YYYY-MM-DD"
-            type="daterange" range-separator="-" size="small" style="width: 190px" :clearable="false" />
+          <el-date-picker :shortcuts="shortcuts" v-model="searchDate1" value-format="YYYY-MM-DD" type="daterange"
+            range-separator="-" size="small" style="width: 190px" :clearable="false" />
         </el-form-item>
         <el-form-item :label="t('reportBoard.productTraceBack.EndDate')" prop="PlanEndDate" class="mb-2">
-          <el-date-picker :shortcuts="shortcuts" v-model="searchDate2" value-format="YYYY-MM-DD"
-            type="daterange" range-separator="-" size="small" style="width: 190px" :clearable="false" />
+          <el-date-picker :shortcuts="shortcuts" v-model="searchDate2" value-format="YYYY-MM-DD" type="daterange"
+            range-separator="-" size="small" style="width: 190px" :clearable="false" />
         </el-form-item>
         <el-form-item :label="t('reportBoard.productTraceBack.BatchNumber')" prop="LotNumber" class="mb-2">
-          <el-input v-model="getForm.LotNumber" placeholder="" clearable @clear="getData"
-            @keyup.enter.native="getData" style="width: 190px" />
+          <el-input v-model="getForm.LotNumber" placeholder="" clearable @clear="getData" @keyup.enter.native="getData"
+            style="width: 190px" />
         </el-form-item>
         <el-form-item :label="t('reportBoard.productTraceBack.SnBarcode')" prop="SerialNumber" class="mb-2">
           <el-input v-model="getForm.SerialNumber" placeholder="" clearable @clear="getData"
@@ -72,8 +72,8 @@
           :min-width="getColumnWidth1('ProductName')" />
         <el-table-column :label="t('reportBoard.productTraceBack.ProductDec')" prop="ProductDec"
           :min-width="getColumnWidth1('ProductDec')" />
-        <el-table-column :label="t('reportBoard.productTraceBack.Specification')"
-          prop="ES_MaterialSpecifications" :min-width="getColumnWidth1('ES_MaterialSpecifications')" />
+        <el-table-column :label="t('reportBoard.productTraceBack.Specification')" prop="ES_MaterialSpecifications"
+          :min-width="getColumnWidth1('ES_MaterialSpecifications')" />
         <el-table-column :label="t('reportBoard.productTraceBack.Unit')" prop="UOMName"
           :min-width="getColumnWidth1('UOMName')" />
         <el-table-column :label="t('reportBoard.productTraceBack.ProductBoxBarcode')" prop="ContainerName_List"
@@ -82,16 +82,16 @@
           :min-width="getColumnWidth1('SN_List')" />
         <el-table-column :label="t('reportBoard.productTraceBack.Qty')" prop="Qty"
           :min-width="getColumnWidth1('Qty')" />
-        <el-table-column :label="t('reportBoard.productTraceBack.RawMaterialBarcode')"
-          prop="IssueContainerName_List" :min-width="getColumnWidth1('IssueContainerName_List')" />
+        <!-- <el-table-column :label="t('reportBoard.productTraceBack.RawMaterialBarcode')"
+          prop="IssueContainerName_List" :min-width="getColumnWidth1('IssueContainerName_List')" /> -->
         <el-table-column :label="t('reportBoard.productTraceBack.RawMaterialCode')" prop="IssueProductName_List"
           :min-width="getColumnWidth1('IssueProductName_List')" />
         <el-table-column :label="t('reportBoard.productTraceBack.RawMaterialName')" prop="IssueProductDec_List"
           :min-width="getColumnWidth1('IssueProductDec_List')" />
         <el-table-column :label="t('reportBoard.productTraceBack.RawMaterialProductType')"
           prop="IssueProductTypeName_List" :min-width="getColumnWidth1('IssueProductTypeName_List')" />
-        <el-table-column :label="t('reportBoard.productTraceBack.RawMaterialSpec')"
-          prop="IssueSpecifications_List" :min-width="getColumnWidth1('IssueSpecifications_List')" />
+        <el-table-column :label="t('reportBoard.productTraceBack.RawMaterialSpec')" prop="IssueSpecifications_List"
+          :min-width="getColumnWidth1('IssueSpecifications_List')" />
         <el-table-column :label="t('reportBoard.productTraceBack.RawMaterialBatch')" prop="IssueLotNumber_List"
           :min-width="getColumnWidth1('IssueLotNumber_List')" />
         <el-table-column :label="t('reportBoard.productTraceBack.OriginalQty')" prop="IssueQty_List"
@@ -110,10 +110,9 @@
         </template>
       </el-table>
       <div class="mt-2 mb-1">
-        <el-pagination :size="'small'" background @size-change="handleSizeChange"
-          @current-change="handleCurrentChange" :pager-count="5" :current-page="pageObj.currentPage"
-          :page-size="pageObj.pageSize" :page-sizes="[30, 50, 100, 200, 300]"
-          layout="total,sizes, prev, pager, next" :total="tableData.length">
+        <el-pagination :size="'small'" background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          :pager-count="5" :current-page="pageObj.currentPage" :page-size="pageObj.pageSize"
+          :page-sizes="[30, 50, 100, 200, 300]" layout="total,sizes, prev, pager, next" :total="tableData.length">
         </el-pagination>
       </div>
       <el-tabs v-model="activeName" type="border-card" @tab-change="tabChange">
@@ -138,12 +137,16 @@
               :min-width="getColumnWidth2('Qty')" />
             <el-table-column :label="t('reportBoard.productTraceBack.Unit')" prop="UOMName"
               :min-width="getColumnWidth2('UOMName')" />
+            <el-table-column :label="t('reportBoard.productTraceBack.ChildContainerName')" prop="ChildContainerName"
+              :min-width="getColumnWidth2('ChildContainerName')" />
             <el-table-column :label="t('reportBoard.productTraceBack.FinisProductCode')" prop="ChildProductName"
               :min-width="getColumnWidth2('ChildProductName')" />
             <el-table-column :label="t('reportBoard.productTraceBack.FinisProductName')" prop="ChildProductDec"
               :min-width="getColumnWidth2('ChildProductDec')" />
             <el-table-column :label="t('reportBoard.productTraceBack.Specification')" prop="ChildSpecification"
               :min-width="getColumnWidth2('ChildSpecification')" />
+            <el-table-column :label="t('reportBoard.productTraceBack.SnBarcode')" prop="SN_List"
+              :min-width="getColumnWidth2('SN_List')" />
             <el-table-column :label="t('reportBoard.productTraceBack.Qty')" prop="IssueQty"
               :min-width="getColumnWidth2('IssueQty')" />
             <el-table-column :label="t('reportBoard.productTraceBack.Unit')" prop="UOMName1"
@@ -196,8 +199,33 @@
           </el-table>
         </el-tab-pane>
         <el-tab-pane :label="t('reportBoard.productTraceBack.Quality')" name="third">
-          <!-- 质量暂未实现，预留占位 -->
-          <el-empty :description="t('reportBoard.productTraceBack.Quality')" />
+          <el-table :data="tableData3" style="width: 100%" size="small" border fit :height="tableHeight2" stripe
+            @row-click="inspectionRowClick">
+            <el-table-column type="index" align="center" fixed :label="$t('publicText.index')" width="60" />
+            <el-table-column :label="t('reportBoard.productTraceBack.InspectionNo')" prop="InspectionNo"
+              :min-width="getColumnWidth3('InspectionNo')" />
+            <el-table-column :label="t('reportBoard.productTraceBack.InspectionType')" prop="InspectionType"
+              :min-width="getColumnWidth3('InspectionType')" />
+            <el-table-column :label="t('reportBoard.productTraceBack.OrderNumber')" fixed prop="OrderNo"
+              :min-width="getColumnWidth3('OrderNo')" />
+            <el-table-column :label="t('reportBoard.productTraceBack.CustomerName')" fixed prop="CustomerName"
+              :min-width="getColumnWidth3('CustomerName')" />
+            <el-table-column :label="t('reportBoard.productTraceBack.MfgOrderName')" prop="MfgorderName"
+              :min-width="getColumnWidth3('MfgorderName')" />
+            <el-table-column :label="t('reportBoard.productTraceBack.InspectionResult')" prop="InspectionResult"
+              :min-width="getColumnWidth3('InspectionResult')" />
+            <el-table-column :label="t('reportBoard.productTraceBack.RelatedWorkOrder')" prop="MfgorderName"
+              :min-width="getColumnWidth3('MfgorderName')" />
+            <el-table-column :label="t('reportBoard.productTraceBack.InspectionTime')" prop="InspectionTime"
+              :min-width="getColumnWidth3('InspectionTime')" />
+            <el-table-column :label="t('reportBoard.productTraceBack.Inspector')" prop="Creator"
+              :min-width="getColumnWidth3('Creator')" />
+            <template #empty>
+              <div class="flex items-center justify-center h-100%">
+                <el-empty />
+              </div>
+            </template>
+          </el-table>
         </el-tab-pane>
         <el-tab-pane :label="t('reportBoard.productTraceBack.Personnel')" name="fourth">
           <el-table :data="tableData4" style="width: 100%" size="small" border fit :height="tableHeight2" stripe>
@@ -239,8 +267,7 @@
               :min-width="getColumnWidth5('ParentCustomerName')" />
             <el-table-column :label="t('reportBoard.productTraceBack.MfgOrderName')" prop="ParentMfgOrderName"
               :min-width="getColumnWidth5('ParentMfgOrderName')" />
-            <el-table-column label="设备名称" prop="ResourceName"
-              :min-width="getColumnWidth5('ResourceName')" />
+            <el-table-column label="设备名称" prop="ResourceName" :min-width="getColumnWidth5('ResourceName')" />
             <el-table-column :label="t('reportBoard.productTraceBack.Process')" prop="WorkflowStepName"
               :min-width="getColumnWidth5('WorkflowStepName')" />
             <el-table-column :label="t('reportBoard.productTraceBack.StartDate')" prop="MoveInDATE"
@@ -261,13 +288,58 @@
 
     <!-- 设备参数弹窗 -->
     <el-dialog v-model="paramDialogVisible" title="设备参数" width="600px" destroy-on-close>
-      <el-table :data="paramData" size="small" border>
+      <el-table :data="paramData" size="small" border height="400">
         <el-table-column :label="t('reportBoard.productTraceBack.ParameterName')" prop="DataName" />
         <el-table-column label="参数值" prop="DataValue" />
       </el-table>
       <template #footer>
         <el-button @click="paramDialogVisible = false">{{ t("publicText.cancel") }}</el-button>
         <el-button type="primary" @click="paramDialogVisible = false">{{ t("publicText.confirm") }}</el-button>
+      </template>
+    </el-dialog>
+    
+    <!-- 首检/巡检检验明细弹窗 -->
+    <el-dialog v-model="inspectionDialogVisible" :title="t('reportBoard.productTraceBack.InspectionDetail')"
+      destroy-on-close width="80%">
+      <el-table :data="inspectionDetailData" size="small" border height="400">
+        <el-table-column :label="t('reportBoard.productTraceBack.InspectItem')" prop="PROJECTNAME" />
+        <el-table-column :label="t('reportBoard.productTraceBack.ActualSituation')" prop="OBSERVEDVALUE" />
+        <el-table-column :label="t('reportBoard.productTraceBack.InspectionResult')" prop="INSPECTIONRESULT" />
+        <el-table-column :label="t('reportBoard.productTraceBack.Inspector')" prop="INSPECTIONBY" />
+      </el-table>
+      <template #footer>
+        <el-button @click="inspectionDialogVisible = false">{{ t("publicText.close") }}</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- OQC检验明细弹窗 -->
+    <el-dialog v-model="oqcDialogVisible" title="OQC检验明细" destroy-on-close width="80%">
+      <el-row :gutter="20">
+        <el-col :span="14">
+          <el-table 
+            :data="oqcMainData" 
+            size="small" 
+            border 
+            height="400" 
+            @row-click="oqcMainRowClick" 
+            highlight-current-row
+          >
+            <el-table-column label="桶编码/批次" prop="ContainerName" />
+            <el-table-column label="SN码" prop="SN" />
+            <el-table-column label="检验结果" prop="JudgmentResult"  width="80"/>
+            <el-table-column label="检验员" prop="Inspector" />
+          </el-table>
+        </el-col>
+        <el-col :span="10">
+          <el-table :data="oqcDetailData" size="small" border height="400">
+            <el-table-column label="检测项" prop="InspectionType" />
+            <el-table-column label="检验内容" prop="ProjectName" />
+            <el-table-column label="实际情况" prop="TargetValue" />
+          </el-table>
+        </el-col>
+      </el-row>
+      <template #footer>
+        <el-button @click="oqcDialogVisible = false">{{ t("publicText.close") }}</el-button>
       </template>
     </el-dialog>
   </div>
@@ -281,6 +353,9 @@ import {
   GetReverseTraceabilityEmployeeQuerys,
   GetReverseTraceabilityResourceQuerys,
   GetReverseTraceabilityResourceDelQuerys,
+  GetReverseInspectionQuerys,
+  GetReverseInspectionDelQuerys,
+  GetShipmentInspectionQuery
 } from "@/api/reportsBoards/productTraceBack";
 import { calculateColumnsWidth } from "@/utils/tableminWidth";
 import {
@@ -298,6 +373,7 @@ import { ElNotification, ElMessage, ElMessageBox } from "element-plus";
 import { useUserStoreWithOut } from "@/stores/modules/user";
 const userStore = useUserStoreWithOut();
 import { useI18n } from "vue-i18n";
+
 const { t } = useI18n();
 
 const tableHeight = ref(0);
@@ -330,17 +406,26 @@ const tableData2 = ref([]);
 const searchDate1 = ref([]);
 const searchDate2 = ref([]);
 const activeName = ref("first");
-const tableData3 = ref([]);
+const tableData3 = ref([
+]);
 const tableData4 = ref([]);
 const tableData5 = ref([]);
 
 // 设备参数弹窗
 const paramDialogVisible = ref(false);
 const paramData = ref([]);
-const getTabForm=ref({
+const getTabForm = ref({
   OrderNo: "",
   MfgOrderName: "",
 });
+// 检验明细弹窗（首检/巡检）
+const inspectionDialogVisible = ref(false)
+const inspectionDetailData = ref([])
+
+// OQC检验明细弹窗
+const oqcDialogVisible = ref(false)
+const oqcMainData = ref([])
+const oqcDetailData = ref([])
 
 watch(
   () => searchDate1.value,
@@ -424,6 +509,11 @@ const cellClick = (row: any) => {
         tableData3.value = res.content || [];
       });
       break;
+    case "third":
+      GetReverseInspectionQuerys(getTabForm.value).then((res: any) => {
+        tableData3.value = res.content || [];
+      });
+      break;
     case "fourth":
       GetReverseTraceabilityEmployeeQuerys(getTabForm.value).then((res: any) => {
         tableData4.value = res.content || [];
@@ -439,38 +529,41 @@ const cellClick = (row: any) => {
   }
 };
 const tabChange = (tab: any) => {
-    console.log(tab);
-    
-    switch (tab) {
-        case "first":
-        GetReverseTraceabilityMaterialQuerys(getTabForm.value).then((res: any) => {
-            tableData2.value = res.content || [];
-        });
-        break;
-        case "second":
-        GetReverseTraceabilityProcessQuerys(getTabForm.value).then((res: any) => {
-            tableData3.value = res.content || [];
-        });
-        break;
-        case "fourth":
-        GetReverseTraceabilityEmployeeQuerys(getTabForm.value).then((res: any) => {
-            tableData4.value = res.content || [];
-        });
-        break;
-        case "fifth":
-        GetReverseTraceabilityResourceQuerys(getTabForm.value).then((res: any) => {
-            tableData5.value = res.content || [];
-        });
-        break;
-        default:
-        break;
-    }
+  console.log(tab);
+
+  switch (tab) {
+    case "first":
+      GetReverseTraceabilityMaterialQuerys(getTabForm.value).then((res: any) => {
+        tableData2.value = res.content || [];
+      });
+      break;
+    case "second":
+      GetReverseTraceabilityProcessQuerys(getTabForm.value).then((res: any) => {
+        tableData3.value = res.content || [];
+      });
+      break;
+    case "third":
+      GetReverseInspectionQuerys(getTabForm.value).then((res: any) => {
+        tableData3.value = res.content || [];
+      });
+    case "fourth":
+      GetReverseTraceabilityEmployeeQuerys(getTabForm.value).then((res: any) => {
+        tableData4.value = res.content || [];
+      });
+      break;
+    case "fifth":
+      GetReverseTraceabilityResourceQuerys(getTabForm.value).then((res: any) => {
+        tableData5.value = res.content || [];
+      });
+      break;
+    default:
+      break;
+  }
 };
 
 const equipmentRowClick = (row: any) => {
   const data = {
-    OrderNo: row.ParentOrderNo,
-    MfgOrderName: row.ParentMfgOrderName,
+   ContainerName:row.ContainerName
   };
   GetReverseTraceabilityResourceDelQuerys(data).then((res: any) => {
     paramData.value = res.content || [];
@@ -478,14 +571,45 @@ const equipmentRowClick = (row: any) => {
   });
 };
 
+// 品质 Tab 行点击事件
+const inspectionRowClick = (row: any) => {
+  const params = { InspectionNo: row.InspectionNo }
+  if (row.InspectionType === '首检' || row.InspectionType === '巡检') {
+    GetReverseInspectionDelQuerys(params).then((res: any) => {
+      inspectionDetailData.value = res.content || []
+      inspectionDialogVisible.value = true
+    })
+  } else if (row.InspectionType === 'OQC') {
+    GetShipmentInspectionQuery(params).then((res: any) => {
+      oqcMainData.value = res.content || []
+      if (oqcMainData.value.length > 0) {
+        // 默认选中第一行并展示其明细
+        oqcMainRowClick(oqcMainData.value[0])
+      } else {
+        oqcDetailData.value = []
+      }
+      oqcDialogVisible.value = true
+    }).catch(() => {
+      ElMessage.error('获取OQC明细失败')
+    })
+  } else {
+    ElMessage.warning('暂不支持该检验类型的明细查看')
+  }
+}
+
+// OQC弹窗左边表格行点击事件
+const oqcMainRowClick = (row: any) => {
+  oqcDetailData.value = row.DetailData || []
+}
+
 const addCancel = () => {
   addVisible.value = false;
 };
-const addSubmit = () => {};
+const addSubmit = () => { };
 const editCancel = () => {
   editVisible.value = false;
 };
-const editSubmit = () => {};
+const editSubmit = () => { };
 const handleSizeChange = (val: any) => {
   pageObj.pageSize = val;
 };
@@ -545,6 +669,8 @@ const columnWidths2 = computed(() => {
     { label: t("reportBoard.productTraceBack.BatchNumber"), prop: "ChildLotNumber" },
     { label: t("reportBoard.productTraceBack.StartDate"), prop: "MoveInDATE" },
     { label: t("reportBoard.productTraceBack.EndDate"), prop: "MoveStdDATE" },
+    { label: t("reportBoard.productTraceBack.ChildContainerName"), prop: "ChildContainerName" },
+    { label: t("reportBoard.productTraceBack.SnBarcode"), prop: "SN_List" },
   ];
   return calculateColumnsWidth(columns, tableData2.value, { padding: 25, fontSize: 13 });
 });

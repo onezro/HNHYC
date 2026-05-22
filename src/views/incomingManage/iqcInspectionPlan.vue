@@ -7,10 +7,11 @@
                         {{ $t("publicText.add") }}
                     </el-button>
                 </div>
-                <el-form ref="formRef" :model="getForm" :inline="true" label-width="auto" size="small" @submit.native.prevent>
+                <el-form ref="formRef" :model="getForm" :inline="true" label-width="auto" size="small"
+                    @submit.native.prevent>
                     <el-form-item :label="$t('iqcProjectCate.ProjectCategoryName')" class="mb-2">
-                        <el-input style="width: 200px" v-model="getForm.ProjectCategoryName" placeholder=""
-                            clearable @keyup.enter.native="getData"></el-input>
+                        <el-input style="width: 200px" v-model="getForm.ProjectCategoryName" placeholder="" clearable
+                            @keyup.enter.native="getData"></el-input>
                     </el-form-item>
 
                     <el-form-item class="mb-2">
@@ -29,17 +30,21 @@
                     <template #default="scope">
                         <span>{{
                             scope.$index + pageObj.pageSize * (pageObj.currentPage - 1) + 1
-                            }}</span>
+                        }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="ProjectCategoryName" :label="$t('iqcProjectCate.ProjectCategoryName')" />
                 <el-table-column prop="Description" :label="$t('iqcProjectCate.Description')" />
-               
+
                 <el-table-column :label="$t('publicText.operation')" width="120" fixed="right" align="center">
                     <template #default="scope">
                         <el-tooltip :content="$t('publicText.edit')" placement="top">
                             <el-button type="primary" icon="EditPen" size="small"
                                 @click.stop="handleEdit(scope.row)"></el-button>
+                        </el-tooltip>
+                        <el-tooltip :content="$t('publicText.delete')" placement="top">
+                            <el-button type="danger" icon="Delete" size="small"
+                                @click.stop="handleDelete(scope.row)"></el-button>
                         </el-tooltip>
                     </template>
                 </el-table-column>
@@ -70,17 +75,17 @@
             <template #footer>
                 <el-button @click="handleAddClose">{{
                     $t("publicText.cancel")
-                    }}</el-button>
+                }}</el-button>
                 <el-button type="primary" @click="handleAddConfirm">{{
                     $t("publicText.confirm")
-                    }}</el-button>
+                }}</el-button>
             </template>
         </el-dialog>
         <el-dialog v-model="editVisible" title="修改" width="500" :append-to-body="true" :close-on-click-modal="false"
             :close-on-press-escape="false" align-center>
             <el-form ref="editFormRef" :model="editForm" label-width="auto">
-                <el-form-item  :label="$t('iqcProjectCate.ProjectCategoryName')" prop="ProjectName">
-                    <el-input v-model="editForm.ProjectCategoryName" :disabled="true"/>
+                <el-form-item :label="$t('iqcProjectCate.ProjectCategoryName')" prop="ProjectName">
+                    <el-input v-model="editForm.ProjectCategoryName" :disabled="true" />
                 </el-form-item>
                 <el-form-item :label="$t('iqcProjectCate.Description')" prop="Description">
                     <el-input v-model="editForm.Description" />
@@ -89,10 +94,10 @@
             <template #footer>
                 <el-button @click="handleEditClose">{{
                     $t("publicText.cancel")
-                }}</el-button>
+                    }}</el-button>
                 <el-button type="primary" @click="handleEditConfirm">{{
                     $t("publicText.confirm")
-                }}</el-button>
+                    }}</el-button>
             </template>
         </el-dialog>
     </div>
@@ -102,7 +107,9 @@
 import {
     GetProjectCategoryQuery,
     AyscProjectCategory,
+    ProjectCategoryMaintDelete
 } from "@/api/incomingManage/iqcProjectCate";
+import { ElMessageBox, ElMessage } from "element-plus";
 import {
     ref,
     watch,
@@ -113,11 +120,12 @@ import {
     reactive,
 } from "vue";
 import { useUserStoreWithOut } from "@/stores/modules/user";
-
 const userStore = useUserStoreWithOut();
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 const getForm = ref({
-   "ProjectCategoryName": "",
-  "Description": ""
+    "ProjectCategoryName": "",
+    "Description": ""
 });
 const uomData = ref<any[]>([]);
 const pageObj = reactive({
@@ -163,6 +171,34 @@ const handleEdit = (row: any) => {
         ...row,
     };
     editVisible.value = true;
+};
+const handleDelete = (row: any) => {
+    // ProjectCategoryMaintDelete(row.ProjectCategoryName).then(() => {
+    //     getData();
+    // });
+    ElMessageBox.confirm(
+        t('publicText.confirm')+t('publicText.delete')+row.ProjectCategoryName+'?',
+        t('publicText.tipTitle'),
+        {
+            confirmButtonText:t('publicText.confirm'),
+            cancelButtonText: t('publicText.cancel'),
+            type: "warning",
+        }
+    )
+        .then(() => {
+            ProjectCategoryMaintDelete({ ProjectCategoryName: row.ProjectCategoryName }).then((res: any) => {
+                if (res.success) {
+                    ElMessage.success("删除成功");
+                    getData();
+                }
+                else {
+                    ElMessage.error("删除失败");
+                }
+            });
+        })
+        .catch(() => {
+            ElMessage.info("已取消删除");
+        });
 };
 const handleAddClose = () => {
     addFormRef.value.resetFields();

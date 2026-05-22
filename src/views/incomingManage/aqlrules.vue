@@ -68,12 +68,12 @@
                 <el-table-column prop="ProductTypeName" :label="'类型'" :min-width="getColumnWidth('ProductTypeName')" />
                 <el-table-column prop="ProductFamilyName" :label="'型号'"
                     :min-width="getColumnWidth('ProductFamilyName')" />
-                <el-table-column prop="IQC_Status" :label="'IQC'" :align="'center'"
+                <!-- <el-table-column prop="IQC_Status" :label="'IQC'" :align="'center'"
                     :min-width="getColumnWidth('IQC_Status')">
                     <template #default="{ row }">
                         <el-tag :type="row.IQC_Status == '未维护' ? 'info' : 'success'">{{ row.IQC_Status }}</el-tag>
                     </template>
-                </el-table-column>
+                </el-table-column> -->
                 <el-table-column prop="First_Inspection_Status" :label="'首检'" width="100" :align="'center'">
                     <template #default="{ row }">
                         <el-tag :type="row.First_Inspection_Status == '未维护' ? 'info' : 'success'">{{
@@ -86,12 +86,12 @@
                             row.Routine_Inspection_Status }}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="Final_Inspection_Status" :label="'尾检'" width="100" :align="'center'">
+                <!-- <el-table-column prop="Final_Inspection_Status" :label="'尾检'" width="100" :align="'center'">
                     <template #default="{ row }">
                         <el-tag :type="row.Final_Inspection_Status == '未维护' ? 'info' : 'success'">{{
                             row.Final_Inspection_Status }}</el-tag>
                     </template>
-                </el-table-column>
+                </el-table-column> -->
                 <el-table-column prop="OQC_Status" :label="'OQC'" width="100" :align="'center'">
                     <template #default="{ row }">
                         <el-tag :type="row.OQC_Status == '未维护' ? 'info' : 'success'">{{ row.OQC_Status }}</el-tag>
@@ -607,10 +607,10 @@ const getDetailForm = ref({
 });
 const activeName = ref('IQC')
 const addTabList = ref([
-    {
-        value: 'IQC',
-        label: 'IQC'
-    },
+    // {
+    //     value: 'IQC',
+    //     label: 'IQC'
+    // },
     {
         value: '首检',
         label: '首检'
@@ -619,16 +619,16 @@ const addTabList = ref([
         value: '巡检',
         label: '巡检'
     },
-    {
-        value: '尾检',
-        label: '尾检'
-    },
+    // {
+    //     value: '尾检',
+    //     label: '尾检'
+    // },
     {
         value: 'OQC',
         label: 'OQC'
     }
 ])
-const activeName2 = ref('IQC')
+const activeName2 = ref('首检')
 const produstTypeList = ref<any[]>([])
 const familyList = ref<any[]>([])
 const customerList = ref<any[]>([])
@@ -653,7 +653,7 @@ const copyForm = ref({
             CharaCteristicGrade: "",
             ToolName: "",
             InspectionBasis: "",
-            InspectionType: "IQC",
+            InspectionType: "首检",
             MeasurementType: "",
             CreateUser: userStore.getUserInfo,
             UpdateUser: "",
@@ -772,7 +772,7 @@ const getSpecData = () => {
 }
 const openAdd = () => {
 
-    activeName.value = 'IQC'
+    activeName.value = '首检'
     addForm.value.iQC_InspectionDetails[0] = {
         InspectionDetailName: "",
         ProjectCategoryName: "",
@@ -783,7 +783,7 @@ const openAdd = () => {
         CharaCteristicGrade: "",
         ToolName: "",
         InspectionBasis: "",
-        InspectionType: 'IQC',
+        InspectionType: '首检',
         MeasurementType: "",
         CreateUser: "",
         UpdateUser: "",
@@ -791,7 +791,7 @@ const openAdd = () => {
     addVisible.value = true;
 };
 const tabChange = (val: any) => {
-    const inspectionType = val || 'IQC';
+    const inspectionType = val || '首检';
     const exists = addForm.value.iQC_InspectionDetails.some(
         (item: any) => item.InspectionType === inspectionType
     );
@@ -903,7 +903,7 @@ const addSubmit = () => {
 const tabChange2 = (val: any) => {
     // getDetailForm.value.InspectionType = val
     // getDetailData()
-    const inspectionType = val || 'IQC';
+    const inspectionType = val || '首检';
     const exists = editForm.value.iQC_InspectionDetails.some(
         (item: any) => item.InspectionType === inspectionType
     );
@@ -914,7 +914,7 @@ const tabChange2 = (val: any) => {
     }
 }
 const handleEdit = (val: any) => {
-    activeName.value = 'IQC'
+    activeName.value = '首检'
     editForm.value.InspectionMasterName = val.InspectionMasterName;
     editForm.value.DBType = "Update";
     editForm.value.SpecName = val.ES_SpecName
@@ -929,13 +929,13 @@ const handleEdit = (val: any) => {
 const getDetailData = () => {
     GetInspectionDetailQuery(getDetailForm.value).then((res: any) => {
         editForm.value.iQC_InspectionDetails = res.content;
-        if (activeName2.value == 'IQC') {
+        if (activeName2.value == '首检') {
             const exists = editForm.value.iQC_InspectionDetails.some(
-                (item: any) => item.InspectionType === 'IQC'
+                (item: any) => item.InspectionType === '首检'
             );
             if (!exists) {
                 editForm.value.iQC_InspectionDetails.push(
-                    createInspectionDetail('IQC')
+                    createInspectionDetail('首检')
                 );
             }
         }
@@ -1098,7 +1098,7 @@ const editSubmit = () => {
 };
 const handleCopy = (val: any) => {
 
-    activeName.value = 'IQC'
+    activeName.value = '首检'
     copyForm.value.InspectionMasterName = val.ES_INSPECTION_MASTERName;
     copyForm.value.DBType = "Add";
     copyForm.value.SpecName = val.ES_SpecName
@@ -1108,13 +1108,13 @@ const handleCopy = (val: any) => {
     getDetailForm.value.InspectionType = ''
     GetInspectionDetailQuery(getDetailForm.value).then((res: any) => {
         copyForm.value.iQC_InspectionDetails = res.content;
-        if (activeName2.value == 'IQC') {
+        if (activeName2.value == '首检') {
             const exists = copyForm.value.iQC_InspectionDetails.some(
-                (item: any) => item.InspectionType === 'IQC'
+                (item: any) => item.InspectionType === '首检'
             );
             if (!exists) {
                 copyForm.value.iQC_InspectionDetails.push(
-                    createInspectionDetail('IQC')
+                    createInspectionDetail('首检')
                 );
             }
         }
@@ -1177,7 +1177,7 @@ const copyInspectionDelete = (filteredIndex: any) => {
     }
 }
 const tabChange3 = (val: any) => {
-    const inspectionType = val || 'IQC';
+    const inspectionType = val || '首检';
     const exists = copyForm.value.iQC_InspectionDetails.some(
         (item: any) => item.InspectionType === inspectionType
     );
@@ -1198,7 +1198,7 @@ const copyCancel = () => {
     copyForm.value.SampleNum = ''
     copyForm.value.iQC_InspectionDetails = [
     ];
-    activeName2.value = 'IQC'
+    activeName2.value = '首检'
 };
 const copySubmit = () => {
     copyForm.value.DBType = "Add";

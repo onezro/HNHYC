@@ -96,7 +96,7 @@
                     width="80" />
                 <el-table-column prop="InProcessInspectionStatus" :label="$t('processInspect.patrolInspectStatus')"
                     width="80" />
-                    <el-table-column prop="ES_InspectionResult" :label="$t('processInspect.ES_InspectionResult')"
+                <el-table-column prop="ES_InspectionResult" :label="$t('processInspect.ES_InspectionResult')"
                     width="80" />
                 <el-table-column prop="ES_SpecName" :label="'工序'" />
                 <el-table-column prop="ES_ProductType" :label="$t('processInspect.productType')" width="80" />
@@ -189,16 +189,30 @@
                 <el-form-item :label="$t('processInspect.productName')" prop="ProductName">
                     <el-input v-model="editForm.ProductName" placeholder="" disabled />
                 </el-form-item>
-                 <el-form-item>
-                   <el-button type="success"  size="small"
-                        @click="exportTableInspect">
+                <el-form-item>
+                    <el-button type="success" size="small" @click="exportTableInspect">
                         导出Excel
                     </el-button>
                 </el-form-item>
-                
+                  <el-form ref="editFormRef" :inline="true" :model="editForm" label-width="60px" :size="'small'"
+                    @submit.native.prevent>
+                    <el-form-item class="mb-2" :label="t('shipmentInspect.Organization')">
+                        <el-select v-model="OrganizationId" placeholder="请选择" style="width: 200px"
+                            @change="changeOrganization">
+                            <el-option v-for="employee in OrganizationList" :key="employee.OrganizationId"
+                                :label="employee.OrganizationName" :value="employee.OrganizationId" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item class="mb-2" :label="t('shipmentInspect.Inspector')">
+                        <el-select v-model="selectedEmployees" multiple placeholder="请选择" style="width: 200px">
+                            <el-option v-for="employee in EmployeeList" :key="employee.FullName"
+                                :label="employee.FullName" :value="employee.FullName" />
+                        </el-select>
+                    </el-form-item>
+                </el-form>
             </el-form>
             <el-tabs v-model="activeName" type="border-card">
-                <el-tab-pane :label="'计量检验'+(editForm.listItem.length)" name="first">
+                <el-tab-pane :label="'计量检验' + (editForm.listItem.length)" name="first">
                     <el-table ref="tempMeasureRef" :data="editForm.listItem" style="width: 100%" :height="300"
                         size="small" border :span-method="objectSpanMethod" :tooltip-effect="'dark'"
                         :row-class-name="tableDetailRowClassName">
@@ -275,14 +289,13 @@
                                     handleUploadChange(file, fileList, row)
                                     " :on-remove="(file: any, fileList: any) =>
                                         handleUploadRemove(file, fileList, row)
-                                        " :before-upload="beforeUploadImg" accept=".jpg,.png"
-                                    list-type="picture">
+                                        " :before-upload="beforeUploadImg" accept=".jpg,.png" list-type="picture">
                                     <el-button icon="Upload" type="primary" :size="'small'"></el-button>
                                 </el-upload></template>
                         </el-table-column>
                     </el-table>
                 </el-tab-pane>
-                <el-tab-pane :label="'计数检验'+(editForm.countItem.length)" name="second">
+                <el-tab-pane :label="'计数检验' + (editForm.countItem.length)" name="second">
                     <el-table :data="editForm.countItem" style="width: 100%" :height="350" size="small" border
                         :span-method="objectSpanMethod2" :tooltip-effect="'dark'"
                         :row-class-name="tableDetailRowClassName2">
@@ -354,8 +367,7 @@
                                     handleUploadChange(file, fileList, row)
                                     " :on-remove="(file: any, fileList: any) =>
                                         handleUploadRemove(file, fileList, row)
-                                        " :before-upload="beforeUploadImg" accept=".jpg,.png"
-                                    list-type="picture">
+                                        " :before-upload="beforeUploadImg" accept=".jpg,.png" list-type="picture">
                                     <el-button icon="Upload" type="primary" :size="'small'"></el-button>
                                 </el-upload></template>
                         </el-table-column>
@@ -530,153 +542,7 @@
                 </div>
             </template>
         </el-dialog>
-        <el-dialog v-model="productConVisit" :title="'工单信息：' + MfgOrderName" width="80%" :append-to-body="true"
-            :close-on-click-modal="false" :close-on-press-escape="false" align-center @close="handleOtherClose">
-            <el-tabs v-model="activeConName" @tab-change="handleClick" type="border-card">
-                <el-tab-pane label="生产调控" name="first">
-                    <el-table :data="ProControlTable" border stripe style="width: 100%" size="small" :height="350">
-                        <el-table-column prop="MfgOrder" :label="$t('oqcInspection.workerOrder')" />
-                        <el-table-column prop="Description" :label="'生产备注'"
-                            :min-width="getColumnWidth3('Description')" />
-                        <el-table-column prop="MfgOrderPO" :label="'工单PO'" :min-width="getColumnWidth3('MfgOrderPO')" />
-                        <el-table-column prop="Quantity" :label="'生产数量'" />
-                        <el-table-column prop="OrderQty" :label="'工单数量'" />
-                        <el-table-column prop="ProductName" :label="$t('oqcInspection.productName')"
-                            :min-width="getColumnWidth3('ProductName')" />
-                        <el-table-column prop="ProductType" :label="$t('oqcInspection.productCategory')" />
-                        <el-table-column prop="ProductDescription" :label="'产品描述'"
-                            :min-width="getColumnWidth3('ProductDescription')" />
-                        <el-table-column prop="CustomerName" :label="$t('oqcInspection.customerName')" />
-                        <el-table-column prop="CustomerPO" :label="$t('oqcInspection.customerPO')" width="130" />
-                        <el-table-column prop="CustomerPN" :label="$t('oqcInspection.customerPN')" width="130" />
-                        <el-table-column prop="SpecName" :label="'工序'" width="130" />
-                        <el-table-column prop="SpecificationNo" :label="'规格书编号'" width="130" />
-                        <el-table-column prop="Tabulator" :label="$t('oqcInspection.CreateTime')" width="150" />
-                        <el-table-column prop="AcceptOrdersDate" :label="'下单日期'" width="150" />
-                        <el-table-column prop="PlaceAnOrderDate" :label="'排产日期'" width="150" />
-                        <el-table-column prop="ShipmentDate" :label="'出货日期'" width="150" />
-                        <el-table-column prop="SchedulingDate" :label="'接单日期'" width="150" />
-                    </el-table>
-                </el-tab-pane>
-                <el-tab-pane label="物料出仓" name="second">
-                    <el-table :data="MaterialDisTable" border stripe style="width: 100%" size="small" :height="350">
-                        <el-table-column prop="MfgOrderName" :label="$t('oqcInspection.workerOrder')" />
-                        <el-table-column prop="MfgOrderPO" :label="'产品分类'" />
-                        <el-table-column prop="ProductName" :label="'原料名称'"
-                            :min-width="getColumnWidth4('ProductName')" />
-                        <el-table-column prop="MaterialSpecifications" :label="'原料规格'" />
-                        <el-table-column prop="MaterialLot" :label="'原料批号'" width="130" />
-                        <el-table-column prop="QtyRequired" :label="'申领数量'" />
-                        <el-table-column prop="BatchLot" :label="'生产批号'" width="130" />
-                        <el-table-column prop="MOSignForConfirmUserName" :label="'MO签收确认'" width="130" />
-                        <el-table-column prop="MOSignForConfirmDate" :label="'MO签收确认时间'" width="130" />
-                        <el-table-column prop="WareHouseConfirmUserName" :label="'仓管确认'" width="130" />
-                        <el-table-column prop="WareHouseConfirmDate" :label="'仓管确认时间'" width="130" />
-                        <el-table-column prop="LabelProductionConfirmUserName" :label="'标签制作确认'" width="130" />
-                        <el-table-column prop="LabelSignForConfirmDate" :label="'标签制作确认时间'" width="150" />
-                        <el-table-column prop="LabelSignForConfirmUserName" :label="'标签签收确认'" width="150" />
-                        <el-table-column prop="LabelSignForConfirmDate" :label="'标签签收确认时间'" width="150" />
-                        <el-table-column prop="CuttingQty" :label="'开料数量'" width="150" />
-                        <el-table-column prop="MaterialReceiverName" :label="'领料人'" width="150" />
-                        <el-table-column prop="MaterialRequisitionDate" :label="'领料时间'" width="150" />
-                    </el-table>
-                </el-tab-pane>
-                <el-tab-pane label="生产过程" name="third">
-                    <el-table :data="ProLineRealTable" border stripe style="width: 100%" size="small" :height="350">
-                        <el-table-column prop="MfgOrderName" :label="$t('oqcInspection.workerOrder')" />
-                        <el-table-column prop="ResourceName" :label="'设备编号'" />
-                        <el-table-column prop="ProductName" :label="'模具编号'" />
-                        <!-- <el-table-column prop="MaterialSpecifications" :label="'一模数'" />
-                        <el-table-column prop="MaterialLot" :label="'片数/卷数'" width="130" /> -->
-                        <el-table-column prop="MoveInDate" :label="'开始时间'" />
-                        <el-table-column prop="TxnDate" :label="'终止时间'" width="130" />
-                        <el-table-column prop="TimeDiff" :label="'时长'" />
-                        <el-table-column prop="EmployeeName" :label="'工号'" width="130" />
-                        <el-table-column prop="FullName" :label="'姓名'" width="130" />
-                    </el-table></el-tab-pane>
-                <el-tab-pane label="包装数据" name="fourth">
-                    <el-table :data="FinishedProTable" border stripe style="width: 100%" size="small" :height="350">
-                        <el-table-column prop="MfgOrderName" :label="$t('oqcInspection.workerOrder')" />
-                        <el-table-column prop="count_records" :label="'整箱数量'" />
-                        <el-table-column prop="avg_NumberOfBoxes" :label="'整箱箱数'" />
-                        <el-table-column prop="MaterialSpecifications" :label="'尾箱数量'" />
-                        <el-table-column prop="MaterialLot" :label="'尾箱箱数'" width="130" />
-                        <el-table-column prop="QtyRequired" :label="'整包数量'" />
-                        <el-table-column prop="BatchLot" :label="'整包包数'" width="130" />
-                        <el-table-column prop="MOSignForConfirmUserName" :label="'尾箱：包/箱'" width="130" />
-                        <el-table-column prop="MOSignForConfirmDate" :label="'整箱净重kg'" width="130" />
-                        <el-table-column prop="WareHouseConfirmUserName" :label="'整箱毛重kg'" width="130" />
-                        <el-table-column prop="BoxModlName" :label="'整箱外箱型'" width="100" />
-                        <el-table-column prop="LabelProductionConfirmUserName" :label="'尾箱净重kg'" width="130" />
-                        <el-table-column prop="LabelSignForConfirmDate" :label="'尾箱毛重kg'" width="150" />
-                        <el-table-column prop="LabelSignForConfirmUserName" :label="'尾箱外箱型'" width="150" />
-                        <el-table-column prop="total_gross_weight" :label="'整包净重kg'" width="150" />
-                        <el-table-column prop="total_net_weight" :label="'整包毛重kg'" width="150" />
-                        <el-table-column prop="MaterialReceiverName" :label="'尾包数量'" width="150" />
-                        <el-table-column prop="MaterialRequisitionDate" :label="'尾包包数'" width="150" />
-                        <el-table-column prop="MaterialReceiverName" :label="'尾包净重kg'" width="150" />
-                        <el-table-column prop="MaterialRequisitionDate" :label="'尾包毛重kg'" width="150" />
-                        <el-table-column prop="MaterialReceiverName" :label="'工号'" width="150" />
-                        <el-table-column prop="MaterialRequisitionDate" :label="'姓名'" width="150" />
-                    </el-table>
-                </el-tab-pane>
-                <el-tab-pane label="过程检验" name="five">
-                    <el-table :data="ProStageTable" border stripe style="width: 100%" size="small" :height="350">
-                        <el-table-column prop="order_no" :label="$t('oqcInspection.workerOrder')" />
-                        <el-table-column prop="pass_rate_percent" label="合格率" />
-                        <el-table-column prop="total_qty" label="总数量" />
-                        <el-table-column prop="good_qty" label="良品数" />
-                        <el-table-column prop="defect_qty" label="不良品数" />
-                        <el-table-column prop="current_balance" label="本次结余" />
-                        <el-table-column prop="process_defect_rate_percent" label="工序不良率" />
-                        <el-table-column prop="process_defect_indentation" label="工序-压痕" />
-                        <el-table-column prop="process_defect_uneven" label="工序-凹凸" />
-                        <el-table-column prop="process_defect_burr" label="工序-毛边" />
-                        <el-table-column prop="process_defect_crack" label="工序-开裂" />
-                        <el-table-column prop="process_defect_foreign_matter" label="工序-异物" />
-                        <el-table-column prop="process_defect_red_dot" label="工序-红点" />
-                        <el-table-column prop="process_defect_over_cut" label="工序-多切" />
-                        <el-table-column prop="process_defect_deformation" label="工序-变形" />
-                        <el-table-column prop="process_defect_punch_break" label="工序-冲断" />
-                        <el-table-column prop="raw_defect_bubble" label="工序-气泡" />
-                        <el-table-column prop="process_defect_other" label="工序-其他" />
-                        <el-table-column prop="raw_material_defect_rate_percent" label="原料不良率" />
-                        <el-table-column prop="raw_defect_glue" label="原料-胶水" />
-                        <el-table-column prop="raw_defect_scratch" label="原料-刮伤" />
-                        <el-table-column prop="raw_defect_pinhole" label="原料-针孔" />
-                        <el-table-column prop="raw_defect_stain" label="原料-污点" />
-                        <el-table-column prop="raw_defect_bubble" label="原料-气泡" />
-                        <el-table-column prop="raw_defect_broken_corner" label="原料-缺角" />
-                        <el-table-column prop="raw_defect_uneven" label="原料-凹凸" />
-                        <el-table-column prop="raw_defect_tilt" label="原料-倾斜" />
-                        <el-table-column prop="process_defect_foreign_matter" label="原料-异物" />
-                        <el-table-column prop="process_defect_red_dot" label="原料-红点" />
-                        <el-table-column prop="raw_defect_other" label="原料-其他" />
-                    </el-table>
-                </el-tab-pane>
-                <el-tab-pane label="生产备注" name="six">
-                    <el-table :data="ManufactureTable" border stripe style="width: 100%" size="small" :height="350">
-                        <el-table-column prop="MfgOrder" :label="$t('oqcInspection.workerOrder')" />
-                        <el-table-column prop="DataValue" :label="'备注'" :min-width="getColumnWidth5('DataValue')" />
-                        <el-table-column prop="LotNumber" :label="'出货批号'" />
-                        <el-table-column prop="ShippingQty" :label="'送检数量'" />
-                        <el-table-column prop="UnitOfMeasure" :label="'单位'" width="130" />
-                        <el-table-column prop="FormattedDate" :label="'送检时间'" />
-                        <el-table-column prop="SubmitterNo" :label="'送检人工号'" width="130" />
-                        <el-table-column prop="Submitter" :label="'送检人'" />
-
-                    </el-table>
-                </el-tab-pane>
-            </el-tabs>
-            <template #footer>
-                <div class="dialog-footer">
-                    <el-button @click="handleOtherClose">{{
-                        $t("publicText.close")
-                        }}</el-button>
-
-                </div>
-            </template>
-        </el-dialog>
+        
         <el-image-viewer v-if="showPreview" show-progress :url-list="srcList" @close="showPreview = false">
             <template #viewer-error="{ activeIndex, src }">
                 <div class="image-slot viewer-error">
@@ -728,8 +594,11 @@ import {
     QueryProductionStageQCReports,
     QueryFinishedProductPackingData,
     QueryManufacturingNotesHistory,
-
 } from "@/api/smtSpotCheck/oqc";
+import {
+    ShipmentInspectionOrganizationQuery,
+    ShipmentInspectionEmployeeQuery
+} from "@/api/smtSpotCheck/oqcApi";
 import {
     ref,
     watch,
@@ -746,7 +615,7 @@ import {
     setLastDate,
     disabledDate,
 } from "@/utils/dataMenu";
-import {showLoading, hideLoading} from "@/utils/loading";
+import { showLoading, hideLoading } from "@/utils/loading";
 import { calculateColumnsWidth, clearTextWidthCache } from '@/utils/tableminWidth'
 import { ElNotification, ElMessageBox, ElMessage } from "element-plus";
 import { useI18n } from "vue-i18n";
@@ -875,6 +744,10 @@ const inspectList = ref([{
 const showPreview = ref(false);
 const srcList = ref<string[]>([]);
 const fileListImg = ref<any[]>([]);
+const OrganizationId = ref("");
+const OrganizationList = ref<any[]>([]);
+const EmployeeList = ref<any[]>([]);
+const selectedEmployees = ref<string[]>([]);
 watch(
     () => searchDate.value,
     (newVal: any, oldVal: any) => {
@@ -904,7 +777,7 @@ onBeforeMount(() => {
     GetResource();
     getProject();
     getProductTypeData()
-
+      getOrganizationData()
 });
 onMounted(() => {
     window.addEventListener("resize", getScreenHeight);
@@ -932,6 +805,24 @@ const tableDetailRowClassName2 = (val: any) => {
         return "danger-row-invent1";
     }
 };
+//获取品质ID
+const getOrganizationData = () => {
+    ShipmentInspectionOrganizationQuery({ OrganizationName: "品质部" }).then((res: any) => {
+        OrganizationList.value = res.content;
+
+    })
+}
+const changeOrganization = (val: any) => {
+
+    getEmployeeData();
+}
+//获取员工数据
+const getEmployeeData = () => {
+    EmployeeList.value = [];
+    ShipmentInspectionEmployeeQuery({ OrganizationId: OrganizationId.value }).then((res: any) => {
+        EmployeeList.value = res.content;
+    })
+}
 const resetFormData = () => {
     getForm.value = {
         InspectionNO: "",
@@ -1004,178 +895,178 @@ const getSpecData = () => {
 }
 // 替换原来的 exportTableInspect 方法
 const exportTableInspect = async () => {
-  // 准备数据行
-  const rows: any[] = [];
-  const measureItems = editForm.value.listItem || [];
-  const countItems = editForm.value.countItem || [];
+    // 准备数据行
+    const rows: any[] = [];
+    const measureItems = editForm.value.listItem || [];
+    const countItems = editForm.value.countItem || [];
 
-  // 计量数据
-  measureItems.forEach((item: any) => {
-    rows.push({
-      ...item,
-      InspectionType: '计量',         // 用于合并的检验类型
-      TypeDisplay: '计量',            // 实际显示值
-      Status: item.Status || (item.InspectionResult === 'OK' ? 'OK' : 'NG'), // 结果
+    // 计量数据
+    measureItems.forEach((item: any) => {
+        rows.push({
+            ...item,
+            InspectionType: '计量',         // 用于合并的检验类型
+            TypeDisplay: '计量',            // 实际显示值
+            Status: item.Status || (item.InspectionResult === 'OK' ? 'OK' : 'NG'), // 结果
+        });
     });
-  });
 
-  // 计数数据
-  countItems.forEach((item: any) => {
-    rows.push({
-      ...item,
-      InspectionType: '计数',
-      TypeDisplay: '计数',
-      Status: item.Status || (item.InspectionResult === 'OK' ? 'OK' : 'NG'),
+    // 计数数据
+    countItems.forEach((item: any) => {
+        rows.push({
+            ...item,
+            InspectionType: '计数',
+            TypeDisplay: '计数',
+            Status: item.Status || (item.InspectionResult === 'OK' ? 'OK' : 'NG'),
+        });
     });
-  });
 
-  if (rows.length === 0) {
-    ElMessage.warning('暂无数据可导出');
-    return;
-  }
-
-  // 表头定义
-  const headers = [
-    'IPQC过程单号',
-    '工单号',
-    'LOT NO',
-    '产品编码',
-    '产品名称',
-    '检验类型',
-    '检验序列',
-    '检验类别',
-    '检验名称',
-    '目标值',
-    '最大值',
-    '最小值',
-    '检验工具',
-    '检验依据',
-    '样品数',
-    '缺陷数',
-    '测量值',
-    '结果'
-  ];
-  showLoading('正在生成Excel文件...');
-  // 创建工作簿和工作表
-  const workbook = new ExcelJS.Workbook();
-  const worksheet = workbook.addWorksheet('检验明细');
-
-  // 添加表头行（第一行）
-  const headerRow = worksheet.addRow(headers);
-  headerRow.font = { bold: true };
-  headerRow.alignment = { horizontal: 'center', vertical: 'middle' };
-  headerRow.fill = {
-    type: 'pattern',
-    pattern: 'solid',
-    fgColor: { argb: 'FFD9D9D9' }
-  };
-  headerRow.border = {
-    top: { style: 'thin' },
-    left: { style: 'thin' },
-    bottom: { style: 'thin' },
-    right: { style: 'thin' }
-  };
-
-  // 添加数据行（从第二行开始）
-  rows.forEach((row) => {
-    const dataRow = worksheet.addRow([
-      editForm.value.InspectionNO,
-      editForm.value.MfgorderName,
-      editForm.value.LotNo,
-      editForm.value.PartNo,
-      editForm.value.ProductName,
-      row.TypeDisplay,
-      row.LineNos,
-      row.ProjectCategoryName,
-      row.ProjectName,
-      row.TargetValue,
-      row.MaxValue,
-      row.MinValue,
-      row.ToolName,
-      row.InspectionBasis,
-      row.SampleNum,
-      row.DefectNum ?? row.DefectCount ?? 0,
-      row.ObservedValue,
-      row.Status,
-    ]);
-
-    // 设置单元格样式
-    dataRow.alignment = { horizontal: 'center', vertical: 'middle' };
-    dataRow.border = {
-      top: { style: 'thin' },
-      left: { style: 'thin' },
-      bottom: { style: 'thin' },
-      right: { style: 'thin' }
-    };
-  });
-
-  // 合并“检验类型”列（F列，索引6，从第2行开始）
-  const typeColumnIndex = 6; // 检验类型在第6列（A=1）
-  let startRow = 2; // 数据从第2行开始（第1行是表头）
-  let currentType = rows[0]?.InspectionType;
-  let count = 0;
-
-  for (let i = 0; i < rows.length; i++) {
-    if (rows[i].InspectionType === currentType) {
-      count++;
-    } else {
-      // 合并前一类型
-      if (count > 1) {
-        worksheet.mergeCells(startRow, typeColumnIndex, startRow + count - 1, typeColumnIndex);
-      }
-      // 重置
-      currentType = rows[i].InspectionType;
-      startRow = i + 2;
-      count = 1;
+    if (rows.length === 0) {
+        ElMessage.warning('暂无数据可导出');
+        return;
     }
-  }
-  // 处理最后一组
-  if (count > 1) {
-    worksheet.mergeCells(startRow, typeColumnIndex, startRow + count - 1, typeColumnIndex);
-  }
 
-  // ========== 动态计算列宽 ==========
-  // 获取每列的最大内容宽度（考虑表头和所有数据行）
-  const colCount = headers.length;
-  const minWidth = 10;   // 最小列宽
-  const maxWidth = 50;   // 最大列宽（避免过宽）
-  
-  for (let col = 1; col <= colCount; col++) {
-    let maxLength = 0;
-    // 遍历工作表中该列的所有单元格（包括表头）
-    worksheet.getColumn(col).eachCell({ includeEmpty: true }, (cell) => {
-      let cellValue = cell.value?.toString() || '';
-      // 计算字符长度（中文按2个字符宽度计算，英文数字按1个）
-      const length = getCharWidth(cellValue);
-      if (length > maxLength) {
-        maxLength = length;
-      }
+    // 表头定义
+    const headers = [
+        'IPQC过程单号',
+        '工单号',
+        'LOT NO',
+        '产品编码',
+        '产品名称',
+        '检验类型',
+        '检验序列',
+        '检验类别',
+        '检验名称',
+        '目标值',
+        '最大值',
+        '最小值',
+        '检验工具',
+        '检验依据',
+        '样品数',
+        '缺陷数',
+        '测量值',
+        '结果'
+    ];
+    showLoading('正在生成Excel文件...');
+    // 创建工作簿和工作表
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('检验明细');
+
+    // 添加表头行（第一行）
+    const headerRow = worksheet.addRow(headers);
+    headerRow.font = { bold: true };
+    headerRow.alignment = { horizontal: 'center', vertical: 'middle' };
+    headerRow.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFD9D9D9' }
+    };
+    headerRow.border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+
+    // 添加数据行（从第二行开始）
+    rows.forEach((row) => {
+        const dataRow = worksheet.addRow([
+            editForm.value.InspectionNO,
+            editForm.value.MfgorderName,
+            editForm.value.LotNo,
+            editForm.value.PartNo,
+            editForm.value.ProductName,
+            row.TypeDisplay,
+            row.LineNos,
+            row.ProjectCategoryName,
+            row.ProjectName,
+            row.TargetValue,
+            row.MaxValue,
+            row.MinValue,
+            row.ToolName,
+            row.InspectionBasis,
+            row.SampleNum,
+            row.DefectNum ?? row.DefectCount ?? 0,
+            row.ObservedValue,
+            row.Status,
+        ]);
+
+        // 设置单元格样式
+        dataRow.alignment = { horizontal: 'center', vertical: 'middle' };
+        dataRow.border = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' }
+        };
     });
-    // 设置列宽，加一些额外边距
-    const colWidth = Math.min(maxWidth, Math.max(minWidth, maxLength + 2));
-    worksheet.getColumn(col).width = colWidth;
-  }
 
-  // 生成并下载
-  const buffer = await workbook.xlsx.writeBuffer();
-  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  saveAs(blob, `${editForm.value.InspectionNO}_检验明细_${dayjs().format('YYYYMMDDHHmmss')}.xlsx`);
-hideLoading();
+    // 合并“检验类型”列（F列，索引6，从第2行开始）
+    const typeColumnIndex = 6; // 检验类型在第6列（A=1）
+    let startRow = 2; // 数据从第2行开始（第1行是表头）
+    let currentType = rows[0]?.InspectionType;
+    let count = 0;
+
+    for (let i = 0; i < rows.length; i++) {
+        if (rows[i].InspectionType === currentType) {
+            count++;
+        } else {
+            // 合并前一类型
+            if (count > 1) {
+                worksheet.mergeCells(startRow, typeColumnIndex, startRow + count - 1, typeColumnIndex);
+            }
+            // 重置
+            currentType = rows[i].InspectionType;
+            startRow = i + 2;
+            count = 1;
+        }
+    }
+    // 处理最后一组
+    if (count > 1) {
+        worksheet.mergeCells(startRow, typeColumnIndex, startRow + count - 1, typeColumnIndex);
+    }
+
+    // ========== 动态计算列宽 ==========
+    // 获取每列的最大内容宽度（考虑表头和所有数据行）
+    const colCount = headers.length;
+    const minWidth = 10;   // 最小列宽
+    const maxWidth = 50;   // 最大列宽（避免过宽）
+
+    for (let col = 1; col <= colCount; col++) {
+        let maxLength = 0;
+        // 遍历工作表中该列的所有单元格（包括表头）
+        worksheet.getColumn(col).eachCell({ includeEmpty: true }, (cell) => {
+            let cellValue = cell.value?.toString() || '';
+            // 计算字符长度（中文按2个字符宽度计算，英文数字按1个）
+            const length = getCharWidth(cellValue);
+            if (length > maxLength) {
+                maxLength = length;
+            }
+        });
+        // 设置列宽，加一些额外边距
+        const colWidth = Math.min(maxWidth, Math.max(minWidth, maxLength + 2));
+        worksheet.getColumn(col).width = colWidth;
+    }
+
+    // 生成并下载
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, `${editForm.value.InspectionNO}_检验明细_${dayjs().format('YYYYMMDDHHmmss')}.xlsx`);
+    hideLoading();
 };
 
 // 辅助函数：计算字符串显示宽度（中文占2，英文数字占1）
 const getCharWidth = (str: string): number => {
-  let width = 0;
-  for (let i = 0; i < str.length; i++) {
-    const charCode = str.charCodeAt(i);
-    // 中文字符范围判断 (粗略)
-    if (charCode >= 0x4e00 && charCode <= 0x9fa5) {
-      width += 2;
-    } else {
-      width += 1;
+    let width = 0;
+    for (let i = 0; i < str.length; i++) {
+        const charCode = str.charCodeAt(i);
+        // 中文字符范围判断 (粗略)
+        if (charCode >= 0x4e00 && charCode <= 0x9fa5) {
+            width += 2;
+        } else {
+            width += 1;
+        }
     }
-  }
-  return width;
+    return width;
 };
 const exportTable = () => {
     exportTableToExcel({
@@ -1209,67 +1100,7 @@ const fetchFinishAllData = async () => {
     );
     return data;
 };
-const handleUpload = (row: any) => {
-    uploadForm.value.InspectionNO = row.FirstArticleInspectionNo;
-    uploadForm2.value.InspectionNO = row.FirstArticleInspectionNo;
-    uploadForm.value.TemplateName = row.ES_FaUrl == null ? '' : row.ES_FaUrl
-    uploadForm2.value.TemplateName = row.ES_CPKUrl == null ? '' : row.ES_CPKUrl
-    deleteCPKForm.value.InspectionNO = row.FirstArticleInspectionNo
-    deleteCPKForm.value.TemplateName = row.ES_CPKUrl == null ? '' : row.ES_CPKUrl
-    deleteFAForm.value.InspectionNO = row.FirstArticleInspectionNo
-    deleteFAForm.value.TemplateName = row.ES_FaUrl == null ? '' : row.ES_FaUrl
-    // console.log(deleteCPKForm.value);
-    // console.log(deleteFAForm.value);
 
-    uploadVisible.value = true;
-};
-
-const openFile = (val: any) => {
-    console.log(val);
-
-    FTPSearchAndDownloadSpecificationDocumentFile(val).then((res: any) => {
-        if (res.success) {
-            const base64Data = 'data:application/pdf;base64,' + res.content.FileData;
-            previewUrl.value = base64Data
-            previewTitle.value = res.content.FileName
-            previewVisible.value = true
-        } else {
-            ElMessage({
-                title: t("message.tipTitle"),
-                message: res.msg,
-                type: "error",
-            });
-            // ElNotification({
-            //          title: t("message.tipTitle"),
-            //     message: res.msg,
-            //     type: "error",
-            // })
-        }
-    })
-}
-const isDownload = (val: any, type: any) => {
-    ElMessageBox.confirm(`是否下载${val}？`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-    })
-        .then(() => {
-            let data = {
-                fileName: val,
-                fileType: type,
-            };
-
-            FACPKDownloadFtpServer(data).then((res: any) => {
-                downloadSingleFile(res.content);
-            });
-        })
-        .catch(() => {
-            ElMessage({
-                type: "info",
-                message: "已取消下载",
-            });
-        });
-};
 const file1UpChange = (file: any, fileList1: any) => {
     if (file.raw) {
         convertToBase64(file.raw, 1);
@@ -1494,6 +1325,7 @@ const handleEditZQConfirm = () => {
         MfgorderName: editForm.value.MfgorderName,
         InspectionResult: "",
         DocumentStatus: "检验中",
+        ES_Inspector: selectedEmployees.value.length > 0 ? selectedEmployees.value.join(',') : "",
         SpecName: editForm.value.SpecName,
         listItem: [...editForm.value.listItem],
     };
@@ -1522,9 +1354,10 @@ const handleEditZQConfirm = () => {
             InspectionBy: userStore.getUserInfo2 !== '' ? userStore.getUserInfo2 : userStore.getUserInfo,
             InspectionUpdateBy: userStore.getUserInfo2 !== '' ? userStore.getUserInfo2 : userStore.getUserInfo,
             ResulthandLing: item.ResulthandLing,
-            CPKMinL: item.CPKMinL,
-            CPKMinW: item.CPKMinW,
-            CPKMinThk: item.CPKMinThk,
+            PictureId: item.PictureId,
+            PictureName: item.PictureName,
+            PictureFile: item.PictureFile
+
         };
     });
     editForm.value.countItem.forEach((item: any) => {
@@ -1552,6 +1385,9 @@ const handleEditZQConfirm = () => {
             InspectionBy: userStore.getUserInfo2 !== '' ? userStore.getUserInfo2 : userStore.getUserInfo,
             InspectionUpdateBy: userStore.getUserInfo2 !== '' ? userStore.getUserInfo2 : userStore.getUserInfo,
             ResulthandLing: item.ResulthandLing,
+            PictureId: item.PictureId,
+            PictureName: item.PictureName,
+            PictureFile: item.PictureFile
         });
     });
 
@@ -1574,7 +1410,8 @@ const handleEditConfirm = () => {
         MfgorderName: editForm.value.MfgorderName,
         InspectionResult: "合格",
         DocumentStatus: "检验完成",
-           SpecName: editForm.value.SpecName,
+         ES_Inspector: selectedEmployees.value.length > 0 ? selectedEmployees.value.join(',') : "",
+        SpecName: editForm.value.SpecName,
         listItem: [...editForm.value.listItem],
     };
 
@@ -1603,9 +1440,9 @@ const handleEditConfirm = () => {
             InspectionBy: userStore.getUserInfo2 !== '' ? userStore.getUserInfo2 : userStore.getUserInfo,
             InspectionUpdateBy: userStore.getUserInfo2 !== '' ? userStore.getUserInfo2 : userStore.getUserInfo,
             ResulthandLing: item.ResulthandLing,
-            CPKMinL: item.CPKMinL,
-            CPKMinW: item.CPKMinW,
-            CPKMinThk: item.CPKMinThk,
+            PictureId: item.PictureId,
+            PictureName: item.PictureName,
+            PictureFile: item.PictureFile
         };
     });
 
@@ -1634,16 +1471,16 @@ const handleEditConfirm = () => {
             InspectionBy: userStore.getUserInfo2 !== '' ? userStore.getUserInfo2 : userStore.getUserInfo,
             InspectionUpdateBy: userStore.getUserInfo2 !== '' ? userStore.getUserInfo2 : userStore.getUserInfo,
             ResulthandLing: item.ResulthandLing,
-            CPKMinL: item.CPKMinL,
-            CPKMinW: item.CPKMinW,
-            CPKMinThk: item.CPKMinThk,
+            PictureId: item.PictureId,
+            PictureName: item.PictureName,
+            PictureFile: item.PictureFile
         });
     });
     console.log(data);
     let isEixt = data.listItem.findIndex((item: any) => {
         return item.InspectionResult !== "OK";
     });
-    
+
     if (isEixt !== -1) {
         // ElMessage({
         //     title: t("message.tipTitle"),
@@ -1726,9 +1563,9 @@ const handleEdit = (row: any, type: any) => {
                     InspectionUpdateBy: userStore.getUserInfo2 !== '' ? userStore.getUserInfo2 : userStore.getUserInfo,
                     InspectionDate: "",
                     ResulthandLing: item.RESULTHANDLING,
-                    CPKMinL: item.CPKMinL,
-                    CPKMinW: item.CPKMinW,
-                    CPKMinThk: item.CPKMinThk,
+                    PictureId: item.PictureId,
+                    PictureName: item.PictureName,
+                    PictureFile: ''
                 };
             })
             .sort((a: any, b: any) => a.LineNos - b.LineNos);
@@ -1775,11 +1612,14 @@ const handleEdit = (row: any, type: any) => {
                     DefectDec: item.DEFECTDEC,
                     SpecialCause: item.SPECIALCAUSE,
                     InspectionResult: item.INSPECTIONRESULT,
-                        Status: item.INSPECTIONRESULT,
+                    Status: item.INSPECTIONRESULT,
                     InspectionBy: userStore.getUserInfo2 !== '' ? userStore.getUserInfo2 : userStore.getUserInfo,
                     InspectionUpdateBy: userStore.getUserInfo2 !== '' ? userStore.getUserInfo2 : userStore.getUserInfo,
                     InspectionDate: "",
                     ResulthandLing: item.RESULTHANDLING,
+                    PictureId: item.PictureId,
+                    PictureName: item.PictureName,
+                    PictureFile: ''
                 };
             })
             .sort((a: any, b: any) => a.LineNos - b.LineNos);
@@ -2309,10 +2149,10 @@ const beforeUpload2 = (file: any) => {
     return true;
 };
 const previewImg = (row: any) => {
-   if(row.PictureFile !== null && row.PictureFile !== ''){
-         let pureName64 =row.PictureName.split(".")[1];
-         srcList.value = [`data:image/${pureName64};base64,${row.PictureFile}`];
-            showPreview.value = true;
+    if (row.PictureId !== null && row.PictureFile !== '') {
+        let pureName64 = row.PictureName.split(".")[1];
+        srcList.value = [`data:image/${pureName64};base64,${row.PictureFile}`];
+        showPreview.value = true;
         return
     }
     srcList.value = []
